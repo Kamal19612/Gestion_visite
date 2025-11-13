@@ -1,6 +1,5 @@
 package com.NativIA.GestionVisite.Entities;
 
-
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -15,24 +14,22 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name= "Statistiques")
+@Table(name="Notifications")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
-public class Statistique implements java.io.Serializable {
+@SuperBuilder   
+public class Notification implements java.io.Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @Column(name = "id", unique = true, nullable = false)
+    private Long id;
     @Column(nullable=false)
-    private Date periode;
+    private String message;
     @Column(nullable=false)
-    private int nombreVisites;
+    private Date date;
     @Column(nullable=false)
-    private int nombreRDV;
-    @Column(nullable=false)
-    private int nombreSoumissions;
-
+    private boolean statut;
 
 }
