@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name="SoumissionRDV")
+@Table(name="soumissionRDV")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

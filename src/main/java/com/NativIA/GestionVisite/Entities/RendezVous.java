@@ -1,6 +1,9 @@
 package com.NativIA.GestionVisite.Entities;
 
 
+import java.sql.Date;
+import java.sql.Time;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,11 +15,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.Date;
-import java.sql.Time;
-
 @Entity
-@Table(name="RendezVous")
+@Table(name="rendezVous")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,9 +27,10 @@ public class RendezVous implements java.io.Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long idRDV;
-    private String type; // directe(immediat) ou planifie
+    
     @Column(nullable=false)
     private Date date;
+
     @Column(nullable=false)
     private Time heure;
 

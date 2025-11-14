@@ -1,28 +1,25 @@
-package com.NativIA.GestionVisite.Entities;
+package com.NativIA.GestionVisite.DTO.Request;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+import org.springframework.stereotype.Component;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Entity
-@DiscriminatorValue("Notifications")
+@Component
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder   
-public class Notification extends User {
-
+@SuperBuilder
+public class notificationRequest {
+    
+    private String name;
     private String message;
-
     private LocalDate date;
-
-    private boolean statut;
 
 }

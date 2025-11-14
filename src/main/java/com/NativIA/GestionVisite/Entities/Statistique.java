@@ -24,7 +24,7 @@ public class Statistique implements java.io.Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
     @Column(nullable=false)
     private Date periode;
     @Column(nullable=false)

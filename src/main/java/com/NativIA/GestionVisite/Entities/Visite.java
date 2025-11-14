@@ -30,6 +30,7 @@ public class Visite implements Serializable{
     private Long id;
     @Column(nullable=false)
     private LocalDateTime Date;
+    private LocalDateTime HEntree;
     private Time HSortie;
     @Column(nullable=false)
     private String motif;

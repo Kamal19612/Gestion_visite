@@ -1,7 +1,5 @@
 package com.NativIA.GestionVisite.Entities;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
@@ -11,18 +9,15 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@DiscriminatorValue("Notifications")
+@DiscriminatorValue("VISITEUR")
 @Setter
 @Getter
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder   
-public class Notification extends User {
+public class Visiteur extends User {
 
-    private String message;
-
-    private LocalDate date;
-
-    private boolean statut;
+    private String entreprise;
+    private String ScanDoc;
 
 }
