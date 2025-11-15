@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,5 +25,9 @@ public class Notification extends User {
     private LocalDate date;
 
     private boolean statut;
+
+    // relation avec l'entité visite
+    @ManyToOne
+    private Visite visite;
 
 }

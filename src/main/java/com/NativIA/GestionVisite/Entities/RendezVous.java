@@ -9,11 +9,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import jakarta.persistence.OneToOne;
 
 @Entity
 @Table(name="rendezVous")
@@ -34,5 +36,17 @@ public class RendezVous implements java.io.Serializable {
     @Column(nullable=false)
     private Time heure;
 
+    // relation avec visite
+    @ManyToOne
+    private Visite visite;
+    // relation avec statistique
+    @ManyToOne
+    private Statistique statistique;
+    // relation avec secretaire
+    @ManyToOne
+    private Secretaire secretaire;
+    // relation avec soumissionRDV
+    @OneToOne(mappedBy = "rendezVous", cascade=jakarta.persistence.CascadeType.ALL, fetch=jakarta.persistence.FetchType.LAZY)
+    private SoumissionRDV soumissionRDV;
 
 }

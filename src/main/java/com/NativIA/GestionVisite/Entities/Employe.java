@@ -1,7 +1,10 @@
 package com.NativIA.GestionVisite.Entities;
 
+import java.util.List;
+
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,5 +21,9 @@ import lombok.experimental.SuperBuilder;
 public class Employe extends User {
 
     private String secteurActivite;
+
+    // liansons avec l'entité visite
+    @OneToMany(mappedBy = "employe", cascade=jakarta.persistence.CascadeType.ALL, fetch=jakarta.persistence.FetchType.LAZY)
+    public List<Visite> visites;
 
 }

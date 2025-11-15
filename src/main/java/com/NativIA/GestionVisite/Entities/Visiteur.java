@@ -2,6 +2,7 @@ package com.NativIA.GestionVisite.Entities;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,9 @@ public class Visiteur extends User {
 
     private String entreprise;
     private String ScanDoc;
+
+    // relation avec SoumissionVisite
+    @OneToMany(mappedBy = "visiteur", cascade=jakarta.persistence.CascadeType.ALL, fetch=jakarta.persistence.FetchType.LAZY)
+    private java.util.List<SoumissionRDV> soumissionVisites;
 
 }
