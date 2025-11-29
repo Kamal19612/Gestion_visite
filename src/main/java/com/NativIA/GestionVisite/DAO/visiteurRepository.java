@@ -8,4 +8,6 @@ import com.NativIA.GestionVisite.Entities.Visiteur;
 @Repository
 public interface visiteurRepository extends JpaRepository<Visiteur, Long> {
 
+	java.util.Optional<Visiteur> findByEmail(String email);
+
 }

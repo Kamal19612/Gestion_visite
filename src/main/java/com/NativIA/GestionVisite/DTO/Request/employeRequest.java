@@ -2,6 +2,7 @@ package com.NativIA.GestionVisite.DTO.Request;
 
 import org.springframework.stereotype.Component;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class employeRequest extends userRequest {
 
+    @NotBlank(message = "Le secteur d'activité est requis")
     private String secteurActivite;
 
 }

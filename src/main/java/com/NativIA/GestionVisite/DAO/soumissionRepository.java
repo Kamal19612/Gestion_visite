@@ -9,4 +9,6 @@ import com.NativIA.GestionVisite.Entities.SoumissionRDV;
 @Repository
 public interface soumissionRepository extends JpaRepository<SoumissionRDV, Long> {
 
+	java.util.List<SoumissionRDV> findByStatut(String statut);
+
 }

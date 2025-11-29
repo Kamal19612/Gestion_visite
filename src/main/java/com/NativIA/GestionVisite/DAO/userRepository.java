@@ -8,4 +8,6 @@ import com.NativIA.GestionVisite.Entities.User;
 @Repository
 public interface userRepository extends JpaRepository<User, Long> {
 
+	java.util.Optional<User> findByEmail(String email);
+
 }

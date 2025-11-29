@@ -8,4 +8,6 @@ import com.NativIA.GestionVisite.Entities.Admin;
 @Repository
 public interface adminRepository extends  JpaRepository<Admin, Long>{
 
+	java.util.List<Admin> findByPrivileges(String privileges);
+
 }

@@ -24,6 +24,6 @@ public class Employe extends User {
 
     // liansons avec l'entité visite
     @OneToMany(mappedBy = "employe", cascade=jakarta.persistence.CascadeType.ALL, fetch=jakarta.persistence.FetchType.LAZY)
-    public List<Visite> visites;
+    private List<Visite> visites;
 
 }

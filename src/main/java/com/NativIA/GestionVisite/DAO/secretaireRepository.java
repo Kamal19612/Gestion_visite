@@ -8,4 +8,6 @@ import com.NativIA.GestionVisite.Entities.Secretaire;
 @Repository
 public interface secretaireRepository extends JpaRepository<Secretaire, Long> {
 
+	java.util.List<Secretaire> findByDepartement(String departement);
+
 }

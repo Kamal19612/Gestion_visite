@@ -8,4 +8,8 @@ import com.NativIA.GestionVisite.Entities.Visite;
 @Repository
 public interface visiteRepository extends JpaRepository<Visite, Long> {
 
+	java.util.List<Visite> findByStatut(com.NativIA.GestionVisite.Enum.typeStatus statut);
+
+	java.util.List<Visite> findByEmploye_Id(Long employeId);
+
 }

@@ -8,4 +8,6 @@ import com.NativIA.GestionVisite.Entities.Notification;
 @Repository
 public interface notificationRepository extends JpaRepository<Notification, Long> {
 
+	java.util.List<Notification> findByVisite_Id(Long visiteId);
+
 }

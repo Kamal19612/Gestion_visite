@@ -8,4 +8,6 @@ import com.NativIA.GestionVisite.Entities.Employe;
 @Repository
 public interface employeRepository extends JpaRepository<Employe, Long> {
 
+	java.util.List<Employe> findBySecteurActivite(String secteur);
+
 }

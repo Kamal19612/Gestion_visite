@@ -8,4 +8,6 @@ import com.NativIA.GestionVisite.Entities.AgentSecurite;
 @Repository
 public interface agentSecuriteRepository extends JpaRepository<AgentSecurite, Long> {
 
+	java.util.Optional<AgentSecurite> findByMatricule(String matricule);
+
 }
