@@ -1,7 +1,6 @@
 package com.NativIA.GestionVisite.Entities;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.time.LocalDateTime;
 
 import com.NativIA.GestionVisite.Enum.typeStatus;
@@ -33,7 +32,7 @@ public class Visite implements Serializable{
     @Column(nullable=false)
     private LocalDateTime Date;
     private LocalDateTime HEntree;
-    private Time HSortie;
+    private LocalDateTime HSortie;
     @Column(nullable=false)
     private String motif;
     @Column(nullable=false)

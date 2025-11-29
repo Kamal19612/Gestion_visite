@@ -1,7 +1,7 @@
 package com.NativIA.GestionVisite.Entities;
 
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -28,7 +28,7 @@ public class Statistique implements java.io.Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable=false)
-    private Date periode;
+    private LocalDate periode;
     @Column(nullable=false)
     private int nombreVisites;
     @Column(nullable=false)
