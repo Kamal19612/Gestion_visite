@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder   
-public class Notification extends User {
+public class Notification implements java.io.Serializable {
 
     private String message;
 

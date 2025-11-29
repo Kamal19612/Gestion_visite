@@ -3,9 +3,9 @@ package com.NativIA.GestionVisite.DAO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.NativIA.GestionVisite.Entities.Notification;
+import com.NativIA.GestionVisite.Entities.Admin;
 
 @Repository
-public interface notificationDAO extends JpaRepository<Notification, Long> {
+public interface adminRepository extends  JpaRepository<Admin, Long>{
 
 }

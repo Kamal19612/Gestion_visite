@@ -3,9 +3,9 @@ package com.NativIA.GestionVisite.DAO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.NativIA.GestionVisite.Entities.Visiteur;
+import com.NativIA.GestionVisite.Entities.Notification;
 
 @Repository
-public interface visiteurDAO extends JpaRepository<Visiteur, Long> {
+public interface notificationRepository extends JpaRepository<Notification, Long> {
 
 }

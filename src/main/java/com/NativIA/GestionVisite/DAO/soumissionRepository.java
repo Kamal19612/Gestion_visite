@@ -3,9 +3,10 @@ package com.NativIA.GestionVisite.DAO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.NativIA.GestionVisite.Entities.Employe;
+import com.NativIA.GestionVisite.Entities.SoumissionRDV;
+
 
 @Repository
-public interface empoyeDAO extends JpaRepository<Employe, Long> {
+public interface soumissionRepository extends JpaRepository<SoumissionRDV, Long> {
 
 }
