@@ -22,9 +22,10 @@ public class NotificationMapper {
     public notificationResponse toResponse(Notification n) {
         if (n == null) return null;
         notificationResponse r = notificationResponse.builder()
-                .message(n.getMessage())
-                .name(null)
-                .build();
+            .message(n.getMessage())
+            .name(null)
+            .build();
+        try { r.setId(n.getId()); } catch (Exception e) {}
         return r;
     }
 

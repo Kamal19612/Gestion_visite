@@ -54,4 +54,24 @@ public class VisiteServiceImpl implements visiteService {
         visiteRepository.deleteById(id);
     }
 
+    @Override
+    public visiteResponse checkIn(Long id) {
+        Visite v = visiteRepository.findById(id).orElse(null);
+        if (v == null) return null;
+        v.setHEntree(java.time.LocalDateTime.now());
+        v.setStatut(com.NativIA.GestionVisite.Enum.typeStatus.EN_COURS);
+        Visite saved = visiteRepository.save(v);
+        return visiteMapper.toResponse(saved);
+    }
+
+    @Override
+    public visiteResponse checkOut(Long id) {
+        Visite v = visiteRepository.findById(id).orElse(null);
+        if (v == null) return null;
+        v.setHSortie(java.time.LocalDateTime.now());
+        v.setStatut(com.NativIA.GestionVisite.Enum.typeStatus.TERMINER);
+        Visite saved = visiteRepository.save(v);
+        return visiteMapper.toResponse(saved);
+    }
+
 }

@@ -15,10 +15,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class statistiqueResponse {
-    
+    private Long id;
     private String periode;
     private int nombreVisites;
     private int nombreRDV;
     private int nombreSoumissions;
+    private Double dureeMoyenneMinutes;
 
 }

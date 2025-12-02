@@ -15,6 +15,10 @@ public interface visiteService {
 
     List<visiteResponse> findByStatut(String statut);
 
+    visiteResponse checkIn(Long id);
+
+    visiteResponse checkOut(Long id);
+
     void delete(Long id);
 
 }

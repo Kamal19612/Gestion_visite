@@ -2,6 +2,8 @@ package com.NativIA.GestionVisite.DTO.Request;
 
 import org.springframework.stereotype.Component;
 
+import com.NativIA.GestionVisite.Enum.Roles;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -28,5 +30,7 @@ public class userRequest {
     @NotBlank(message = "Le mot de passe est requis")
     @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
     private String password;
+
+    private Roles role;
 
 }

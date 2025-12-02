@@ -18,6 +18,6 @@ public class notificationResponse {
 
     private String message;
     private String name;
-
+    private Long id;
 
 }

@@ -23,6 +23,7 @@ public class SecretaireMapper {
     public secretaireResponse toResponse(Secretaire s) {
         if (s == null) return null;
         secretaireResponse r = new secretaireResponse();
+        r.setId(s.getIdUser());
         r.setName(s.getName());
         r.setEmail(s.getEmail());
         r.setDepartement(s.getDepartement());

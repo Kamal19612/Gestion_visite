@@ -32,6 +32,9 @@ public class NotificationController {
     @PostMapping
     public ResponseEntity<notificationResponse> create(@Valid @RequestBody notificationRequest req) {
         notificationResponse res = service.create(req);
+        if (res != null && res.getId() != null) {
+            return ResponseEntity.created(java.net.URI.create("/api/v1/notifications/" + res.getId())).body(res);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 

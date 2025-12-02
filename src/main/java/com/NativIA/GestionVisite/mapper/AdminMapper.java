@@ -23,6 +23,7 @@ public class AdminMapper {
     public adminResponse toResponse(Admin a) {
         if (a == null) return null;
         adminResponse r = new adminResponse();
+        r.setId(a.getIdUser());
         r.setName(a.getName());
         r.setEmail(a.getEmail());
         r.setPrivileges(a.getPrivileges());

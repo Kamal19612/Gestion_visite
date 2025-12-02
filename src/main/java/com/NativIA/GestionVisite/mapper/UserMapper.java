@@ -15,6 +15,7 @@ public class UserMapper {
                 .name(req.getName())
                 .email(req.getEmail())
                 .password(req.getPassword())
+                .role(req.getRole())
                 .build();
         return u;
     }
@@ -22,8 +23,10 @@ public class UserMapper {
     public userResponse toResponse(User u) {
         if (u == null) return null;
         return userResponse.builder()
+                .id(u.getIdUser())
                 .name(u.getName())
                 .email(u.getEmail())
+                .role(u.getRole())
                 .build();
     }
 
@@ -32,6 +35,7 @@ public class UserMapper {
         if (req.getName() != null) target.setName(req.getName());
         if (req.getEmail() != null) target.setEmail(req.getEmail());
         if (req.getPassword() != null) target.setPassword(req.getPassword());
+        if (req.getRole() != null) target.setRole(req.getRole());
     }
 
 }

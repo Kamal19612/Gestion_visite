@@ -32,6 +32,9 @@ public class SoumissionController {
     @PostMapping
     public ResponseEntity<soumissionResponse> create(@Valid @RequestBody soumissionRequest req) {
         soumissionResponse res = service.create(req);
+        if (res != null && res.getId() != null) {
+            return ResponseEntity.created(java.net.URI.create("/api/v1/soumissions/" + res.getId())).body(res);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 

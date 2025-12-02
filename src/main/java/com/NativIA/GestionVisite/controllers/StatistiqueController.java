@@ -32,6 +32,9 @@ public class StatistiqueController {
     @PostMapping
     public ResponseEntity<statistiqueResponse> create(@Valid @RequestBody statistiqueRequest req) {
         statistiqueResponse res = service.create(req);
+        if (res != null && res.getId() != null) {
+            return ResponseEntity.created(java.net.URI.create("/api/v1/statistiques/" + res.getId())).body(res);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 

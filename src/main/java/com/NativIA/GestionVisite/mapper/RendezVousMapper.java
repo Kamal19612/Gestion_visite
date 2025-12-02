@@ -23,6 +23,7 @@ public class RendezVousMapper {
     public RDVResponse toResponse(RendezVous r) {
         if (r == null) return null;
         RDVResponse resp = RDVResponse.builder().build();
+        try { resp.setId(r.getIdRDV()); } catch (Exception e) {}
         if (r.getDate() != null) resp.setDate(r.getDate().toString());
         if (r.getHeure() != null) resp.setHeure(r.getHeure().toString());
         return resp;

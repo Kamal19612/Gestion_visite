@@ -36,6 +36,7 @@ public class SoumissionMapper {
     public soumissionResponse toResponse(SoumissionRDV s) {
         if (s == null) return null;
         soumissionResponse r = soumissionResponse.builder()
+                .id(s.getIdSoumission())
                 .nom(s.getNom())
                 .prenom(s.getPrenom())
                 .departement(s.getDepartement())

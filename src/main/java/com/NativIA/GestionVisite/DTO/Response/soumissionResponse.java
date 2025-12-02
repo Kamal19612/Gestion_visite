@@ -24,6 +24,7 @@ public class soumissionResponse {
     private String entreprise;
     private String motif;
     private String dateRendezVous;
+    private Long id;
     private String heureRendezVous;
     private String statut;
 

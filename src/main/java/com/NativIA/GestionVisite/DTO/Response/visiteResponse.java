@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class visiteResponse {
-
+    private Long id;
     private String date;
     private String HEntree;
     private String HSortie;

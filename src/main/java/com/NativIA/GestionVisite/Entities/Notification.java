@@ -20,6 +20,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder   
 public class Notification implements java.io.Serializable {
 
+    @jakarta.persistence.Id
+    @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    private Long id;
+
     private String message;
 
     private LocalDate date;

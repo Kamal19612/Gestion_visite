@@ -36,6 +36,9 @@ public class Statistique implements java.io.Serializable {
     @Column(nullable=false)
     private int nombreSoumissions;
 
+    @Column
+    private Double dureeMoyenneMinutes;
+
     // relation avec visite
     @OneToMany(mappedBy = "statistique", cascade=jakarta.persistence.CascadeType.ALL, fetch=jakarta.persistence.FetchType.LAZY)
     private List<Visite> visites;

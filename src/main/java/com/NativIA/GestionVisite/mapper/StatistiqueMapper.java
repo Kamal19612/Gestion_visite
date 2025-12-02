@@ -1,6 +1,7 @@
 package com.NativIA.GestionVisite.mapper;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.stereotype.Component;
 
@@ -18,17 +19,26 @@ public class StatistiqueMapper {
                 .nombreRDV(req.getNombreRDV())
                 .nombreSoumissions(req.getNombreSoumissions())
                 .build();
-        try { if (req.getPeriode() != null) s.setPeriode(LocalDate.parse(req.getPeriode())); } catch (Exception e) {}
+        try {
+            if (req.getPeriode() != null) {
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                s.setPeriode(LocalDate.parse(req.getPeriode(), fmt));
+            }
+        } catch (Exception e) {}
         return s;
     }
 
     public statistiqueResponse toResponse(Statistique s) {
         if (s == null) return null;
         statistiqueResponse r = new statistiqueResponse();
-        r.setPeriode(s.getPeriode().toString());
+        try {
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            r.setPeriode(s.getPeriode() != null ? s.getPeriode().format(fmt) : null);
+        } catch (Exception e) { r.setPeriode(s.getPeriode() != null ? s.getPeriode().toString() : null); }
         r.setNombreVisites(s.getNombreVisites());
         r.setNombreRDV(s.getNombreRDV());
         r.setNombreSoumissions(s.getNombreSoumissions());
+        r.setDureeMoyenneMinutes(s.getDureeMoyenneMinutes());
         return r;
     }
 
@@ -37,7 +47,13 @@ public class StatistiqueMapper {
         if (req.getNombreVisites() >= 0) target.setNombreVisites(req.getNombreVisites());
         if (req.getNombreRDV() >= 0) target.setNombreRDV(req.getNombreRDV());
         if (req.getNombreSoumissions() >= 0) target.setNombreSoumissions(req.getNombreSoumissions());
-        try { if (req.getPeriode() != null) target.setPeriode(LocalDate.parse(req.getPeriode())); } catch (Exception e) {}
+        if (req.getDureeMoyenneMinutes() != null) target.setDureeMoyenneMinutes(req.getDureeMoyenneMinutes());
+        try {
+            if (req.getPeriode() != null) {
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                target.setPeriode(LocalDate.parse(req.getPeriode(), fmt));
+            }
+        } catch (Exception e) {}
     }
 
 }

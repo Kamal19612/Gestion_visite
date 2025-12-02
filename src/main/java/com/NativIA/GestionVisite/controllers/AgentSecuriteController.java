@@ -32,6 +32,9 @@ public class AgentSecuriteController {
     @PostMapping
     public ResponseEntity<ASResponse> create(@Valid @RequestBody ASRequest req) {
         ASResponse res = service.create(req);
+        if (res != null && res.getId() != null) {
+            return ResponseEntity.created(java.net.URI.create("/api/v1/agents/" + res.getId())).body(res);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 

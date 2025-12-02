@@ -31,6 +31,9 @@ public class UserController {
     @PostMapping
     public ResponseEntity<userResponse> create(@Valid @RequestBody userRequest req) {
         userResponse res = service.create(req);
+        if (res != null && res.getId() != null) {
+            return ResponseEntity.created(java.net.URI.create("/api/v1/users/" + res.getId())).body(res);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 

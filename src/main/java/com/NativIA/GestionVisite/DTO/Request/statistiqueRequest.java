@@ -30,4 +30,7 @@ public class statistiqueRequest {
     @Min(value = 0, message = "Le nombre de soumissions doit être positif")
     private int nombreSoumissions;
 
+    // Optionnel: la durée moyenne peut être calculée côté serveur; le client peut la laisser vide
+    private Double dureeMoyenneMinutes;
+
 }

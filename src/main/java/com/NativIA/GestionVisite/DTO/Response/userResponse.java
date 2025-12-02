@@ -14,7 +14,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class userResponse {
 
+    private Long id;
     private String name;
     private String email;
+    private com.NativIA.GestionVisite.Enum.Roles role;
 
 }

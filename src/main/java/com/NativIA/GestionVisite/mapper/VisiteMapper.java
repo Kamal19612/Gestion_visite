@@ -33,6 +33,7 @@ public class VisiteMapper {
     public visiteResponse toResponse(Visite v) {
         if (v == null) return null;
         visiteResponse r = visiteResponse.builder()
+                .id(v.getId())
                 .motif(v.getMotif())
                 .build();
         if (v.getDate() != null) r.setDate(v.getDate().toString());
