@@ -30,13 +30,13 @@ public class Visite implements Serializable{
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     @Column(nullable=false)
-    private LocalDateTime Date;
-    private LocalDateTime HEntree;
-    private LocalDateTime HSortie;
+    private LocalDateTime date;
+    private LocalDateTime hEntree;
+    private LocalDateTime hSortie;
     @Column(nullable=false)
     private String motif;
     @Column(nullable=false)
-    private typeStatus Statut;
+    private typeStatus statut;
 
     //relation avec l'entité employe
     @ManyToOne  

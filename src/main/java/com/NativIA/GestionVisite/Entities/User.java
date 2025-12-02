@@ -37,7 +37,7 @@ public class User implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    private Long idUser;
+    private Long id;
 
     private String name;
 

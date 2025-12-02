@@ -24,7 +24,7 @@ public class VisiteurMapper {
     public visiteurResponse toResponse(Visiteur v) {
         if (v == null) return null;
         visiteurResponse r = new visiteurResponse();
-        r.setId(v.getIdUser());
+        r.setId(v.getId());
         r.setName(v.getName());
         r.setEmail(v.getEmail());
         r.setEntreprise(v.getEntreprise());

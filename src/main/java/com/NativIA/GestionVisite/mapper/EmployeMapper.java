@@ -23,7 +23,7 @@ public class EmployeMapper {
     public employeResponse toResponse(Employe e) {
         if (e == null) return null;
         employeResponse r = new employeResponse();
-        r.setId(e.getIdUser());
+        r.setId(e.getId());
         r.setName(e.getName());
         r.setEmail(e.getEmail());
         r.setSecteurActivite(e.getSecteurActivite());

@@ -23,7 +23,7 @@ public class AgentSecuriteMapper {
     public ASResponse toResponse(AgentSecurite a) {
         if (a == null) return null;
         ASResponse r = new ASResponse();
-        r.setId(a.getIdUser());
+        r.setId(a.getId());
         r.setName(a.getName());
         r.setEmail(a.getEmail());
         r.setMatricule(a.getMatricule());

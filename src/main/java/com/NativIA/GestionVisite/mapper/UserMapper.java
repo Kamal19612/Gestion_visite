@@ -23,7 +23,7 @@ public class UserMapper {
     public userResponse toResponse(User u) {
         if (u == null) return null;
         return userResponse.builder()
-                .id(u.getIdUser())
+                .id(u.getId())
                 .name(u.getName())
                 .email(u.getEmail())
                 .role(u.getRole())
