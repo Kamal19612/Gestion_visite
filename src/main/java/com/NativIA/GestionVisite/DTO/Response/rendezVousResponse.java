@@ -15,6 +15,9 @@ public class rendezVousResponse {
     private Long id;
     private String date;
     private String heure;
+    private String type;
+    private Boolean statut;
+    private String code;
     private Long visiteId;
     private Long statistiqueId;
     private Long secretaireId;

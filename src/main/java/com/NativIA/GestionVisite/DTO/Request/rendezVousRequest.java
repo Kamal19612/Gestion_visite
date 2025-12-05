@@ -20,4 +20,8 @@ public class rendezVousRequest {
     @NotBlank(message = "L'heure est requise")
     private String heure;
 
+    private String type;
+    private Boolean statut;
+    private String code;
+
 }

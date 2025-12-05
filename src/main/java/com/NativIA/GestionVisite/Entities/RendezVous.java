@@ -4,8 +4,12 @@ package com.NativIA.GestionVisite.Entities;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.NativIA.GestionVisite.Enum.TypeRDV;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,6 +39,14 @@ public class RendezVous implements java.io.Serializable {
 
     @Column(nullable=false)
     private LocalTime heure;
+
+    @Enumerated(EnumType.STRING)
+    private TypeRDV type;
+
+    private Boolean statut;
+
+    @Column(unique = true)
+    private String code;
 
     // relation avec visite
     @ManyToOne

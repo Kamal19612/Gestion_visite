@@ -16,7 +16,8 @@ public class VisiteurMapper {
                 .email(req.getEmail())
                 .password(req.getPassword())
                 .entreprise(req.getEntreprise())
-                .scanDoc(req.getScanDoc())
+                .scanDocumentPath(req.getScanDocumentPath())
+                .signaturePath(req.getSignaturePath())
                 .build();
         return v;
     }
@@ -28,7 +29,8 @@ public class VisiteurMapper {
         r.setName(v.getName());
         r.setEmail(v.getEmail());
         r.setEntreprise(v.getEntreprise());
-        r.setScanDoc(v.getScanDoc());
+        r.setScanDocumentPath(v.getScanDocumentPath());
+        r.setSignaturePath(v.getSignaturePath());
         return r;
     }
 
@@ -38,7 +40,8 @@ public class VisiteurMapper {
         if (req.getEmail() != null) target.setEmail(req.getEmail());
         if (req.getPassword() != null) target.setPassword(req.getPassword());
         if (req.getEntreprise() != null) target.setEntreprise(req.getEntreprise());
-        if (req.getScanDoc() != null) target.setScanDoc(req.getScanDoc());
+        if (req.getScanDocumentPath() != null) target.setScanDocumentPath(req.getScanDocumentPath());
+        if (req.getSignaturePath() != null) target.setSignaturePath(req.getSignaturePath());
     }
 
 }

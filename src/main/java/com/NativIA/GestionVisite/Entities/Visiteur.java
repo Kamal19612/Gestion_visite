@@ -19,7 +19,8 @@ import lombok.experimental.SuperBuilder;
 public class Visiteur extends User {
 
     private String entreprise;
-    private String scanDoc;
+    private String scanDocumentPath;
+    private String signaturePath;
 
     // relation avec SoumissionVisite
     @OneToMany(mappedBy = "visiteur", cascade=jakarta.persistence.CascadeType.ALL, fetch=jakarta.persistence.FetchType.LAZY)
