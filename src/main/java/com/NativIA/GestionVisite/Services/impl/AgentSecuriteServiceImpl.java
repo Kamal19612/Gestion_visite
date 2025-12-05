@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.NativIA.GestionVisite.DAO.agentSecuriteRepository;
-import com.NativIA.GestionVisite.DTO.Request.ASRequest;
-import com.NativIA.GestionVisite.DTO.Response.ASResponse;
+import com.NativIA.GestionVisite.DTO.Request.agentSecuriteRequest;
+import com.NativIA.GestionVisite.DTO.Response.agentSecuriteResponse;
 import com.NativIA.GestionVisite.Entities.AgentSecurite;
 import com.NativIA.GestionVisite.Services.agentSecuriteService;
 import com.NativIA.GestionVisite.mapper.AgentSecuriteMapper;
@@ -25,23 +25,23 @@ public class AgentSecuriteServiceImpl implements agentSecuriteService {
     private AgentSecuriteMapper agentSecuriteMapper;
 
     @Override
-    public ASResponse create(ASRequest request) {
+    public agentSecuriteResponse create(agentSecuriteRequest request) {
         AgentSecurite a = agentSecuriteMapper.toEntity(request);
         return agentSecuriteMapper.toResponse(agentSecuriteRepository.save(a));
     }
 
     @Override
-    public ASResponse getById(Long id) {
+    public agentSecuriteResponse getById(Long id) {
         return agentSecuriteRepository.findById(id).map(agentSecuriteMapper::toResponse).orElse(null);
     }
 
     @Override
-    public List<ASResponse> getAll() {
+    public List<agentSecuriteResponse> getAll() {
         return agentSecuriteRepository.findAll().stream().map(agentSecuriteMapper::toResponse).collect(Collectors.toList());
     }
 
     @Override
-    public ASResponse findByMatricule(String matricule) {
+    public agentSecuriteResponse findByMatricule(String matricule) {
         return agentSecuriteRepository.findByMatricule(matricule).map(agentSecuriteMapper::toResponse).orElse(null);
     }
 

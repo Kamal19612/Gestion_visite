@@ -1,38 +1,66 @@
 package com.NativIA.GestionVisite.mapper;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
+import com.NativIA.GestionVisite.DTO.Request.rendezVousRequest;
+import com.NativIA.GestionVisite.DTO.Response.rendezVousResponse;
+import com.NativIA.GestionVisite.Entities.RendezVous;
 import org.springframework.stereotype.Component;
 
-import com.NativIA.GestionVisite.DTO.Request.RDVRequest;
-import com.NativIA.GestionVisite.DTO.Response.RDVResponse;
-import com.NativIA.GestionVisite.Entities.RendezVous;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 
 @Component
 public class RendezVousMapper {
 
-    public RendezVous toEntity(RDVRequest req) {
-        if (req == null) return null;
-        RendezVous r = RendezVous.builder().build();
-        try { if (req.getDate() != null) r.setDate(LocalDate.parse(req.getDate())); } catch (Exception e) {}
-        try { if (req.getHeure() != null) r.setHeure(LocalTime.parse(req.getHeure())); } catch (Exception e) {}
-        return r;
+    public RendezVous toEntity(rendezVousRequest req) throws DateTimeParseException {
+        if (req == null) {
+            return null;
+        }
+        return RendezVous.builder()
+                .date(LocalDate.parse(req.getDate()))
+                .heure(LocalTime.parse(req.getHeure()))
+                .build();
     }
 
-    public RDVResponse toResponse(RendezVous r) {
-        if (r == null) return null;
-        RDVResponse resp = RDVResponse.builder().build();
-        try { resp.setId(r.getIdRDV()); } catch (Exception e) {}
-        if (r.getDate() != null) resp.setDate(r.getDate().toString());
-        if (r.getHeure() != null) resp.setHeure(r.getHeure().toString());
-        return resp;
+    public rendezVousResponse toResponse(RendezVous r) {
+        if (r == null) {
+            return null;
+        }
+        rendezVousResponse.rendezVousResponseBuilder respBuilder = rendezVousResponse.builder()
+                .id(r.getIdRDV());
+
+        if (r.getDate() != null) {
+            respBuilder.date(r.getDate().toString());
+        }
+        if (r.getHeure() != null) {
+            respBuilder.heure(r.getHeure().toString());
+        }
+
+        if (r.getVisite() != null) {
+            respBuilder.visiteId(r.getVisite().getId());
+        }
+        if (r.getStatistique() != null) {
+            respBuilder.statistiqueId(r.getStatistique().getId());
+        }
+        if (r.getSecretaire() != null) {
+            respBuilder.secretaireId(r.getSecretaire().getId());
+        }
+        if (r.getSoumissionRDV() != null) {
+            respBuilder.soumissionRDVId(r.getSoumissionRDV().getIdSoumission());
+        }
+        
+        return respBuilder.build();
     }
 
-    public void updateEntity(RendezVous target, RDVRequest req) {
-        if (target == null || req == null) return;
-        try { if (req.getDate() != null) target.setDate(LocalDate.parse(req.getDate())); } catch (Exception e) {}
-        try { if (req.getHeure() != null) target.setHeure(LocalTime.parse(req.getHeure())); } catch (Exception e) {}
+    public void updateEntity(RendezVous target, rendezVousRequest req) throws DateTimeParseException {
+        if (target == null || req == null) {
+            return;
+        }
+        if (req.getDate() != null) {
+            target.setDate(LocalDate.parse(req.getDate()));
+        }
+        if (req.getHeure() != null) {
+            target.setHeure(LocalTime.parse(req.getHeure()));
+        }
     }
-
 }

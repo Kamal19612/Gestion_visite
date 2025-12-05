@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class ASRequest extends userRequest {
+public class agentSecuriteRequest extends userRequest {
 
     @NotBlank(message = "Le matricule est requis")
     private String matricule;

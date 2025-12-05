@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class ASResponse extends userResponse {
+public class agentSecuriteResponse extends userResponse {
 
     private String matricule;
 

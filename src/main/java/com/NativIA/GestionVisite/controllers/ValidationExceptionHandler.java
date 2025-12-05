@@ -1,5 +1,6 @@
 package com.NativIA.GestionVisite.controllers;
 
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,14 @@ public class ValidationExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(err -> errors.put(err.getField(), err.getDefaultMessage()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    public ResponseEntity<Map<String, String>> handleDateTimeParseExceptions(DateTimeParseException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Invalid date/time format. Please use ISO format (yyyy-MM-dd for dates, HH:mm:ss for times).");
+        error.put("details", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(Exception.class)

@@ -2,18 +2,18 @@ package com.NativIA.GestionVisite.Services;
 
 import java.util.List;
 
-import com.NativIA.GestionVisite.DTO.Request.RDVRequest;
-import com.NativIA.GestionVisite.DTO.Response.RDVResponse;
+import com.NativIA.GestionVisite.DTO.Request.rendezVousRequest;
+import com.NativIA.GestionVisite.DTO.Response.rendezVousResponse;
 
 public interface rendezVousService {
 
-    RDVResponse create(RDVRequest request);
+    rendezVousResponse create(rendezVousRequest request);
 
-    RDVResponse getById(Long id);
+    rendezVousResponse getById(Long id);
 
-    List<RDVResponse> getAll();
+    List<rendezVousResponse> getAll();
 
-    List<RDVResponse> findByDate(String date);
+    List<rendezVousResponse> findByDate(String date);
 
     void delete(Long id);
 

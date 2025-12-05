@@ -2,14 +2,14 @@ package com.NativIA.GestionVisite.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.NativIA.GestionVisite.DTO.Request.ASRequest;
-import com.NativIA.GestionVisite.DTO.Response.ASResponse;
+import com.NativIA.GestionVisite.DTO.Request.agentSecuriteRequest;
+import com.NativIA.GestionVisite.DTO.Response.agentSecuriteResponse;
 import com.NativIA.GestionVisite.Entities.AgentSecurite;
 
 @Component
 public class AgentSecuriteMapper {
 
-    public AgentSecurite toEntity(ASRequest req) {
+    public AgentSecurite toEntity(agentSecuriteRequest req) {
         if (req == null) return null;
         AgentSecurite a = AgentSecurite.builder()
                 .name(req.getName())
@@ -20,9 +20,9 @@ public class AgentSecuriteMapper {
         return a;
     }
 
-    public ASResponse toResponse(AgentSecurite a) {
+    public agentSecuriteResponse toResponse(AgentSecurite a) {
         if (a == null) return null;
-        ASResponse r = new ASResponse();
+        agentSecuriteResponse r = new agentSecuriteResponse();
         r.setId(a.getId());
         r.setName(a.getName());
         r.setEmail(a.getEmail());
@@ -30,7 +30,7 @@ public class AgentSecuriteMapper {
         return r;
     }
 
-    public void updateEntity(AgentSecurite target, ASRequest req) {
+    public void updateEntity(AgentSecurite target, agentSecuriteRequest req) {
         if (target == null || req == null) return;
         if (req.getName() != null) target.setName(req.getName());
         if (req.getEmail() != null) target.setEmail(req.getEmail());

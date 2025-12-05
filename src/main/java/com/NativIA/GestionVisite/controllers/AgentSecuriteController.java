@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.NativIA.GestionVisite.DTO.Request.ASRequest;
-import com.NativIA.GestionVisite.DTO.Response.ASResponse;
+import com.NativIA.GestionVisite.DTO.Request.agentSecuriteRequest;
+import com.NativIA.GestionVisite.DTO.Response.agentSecuriteResponse;
 import com.NativIA.GestionVisite.Services.agentSecuriteService;
 
 import jakarta.validation.Valid;
@@ -30,8 +30,8 @@ public class AgentSecuriteController {
     }
 
     @PostMapping
-    public ResponseEntity<ASResponse> create(@Valid @RequestBody ASRequest req) {
-        ASResponse res = service.create(req);
+    public ResponseEntity<agentSecuriteResponse> create(@Valid @RequestBody agentSecuriteRequest req) {
+        agentSecuriteResponse res = service.create(req);
         if (res != null && res.getId() != null) {
             return ResponseEntity.created(java.net.URI.create("/api/v1/agents/" + res.getId())).body(res);
         }
@@ -39,17 +39,17 @@ public class AgentSecuriteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ASResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<agentSecuriteResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<ASResponse>> getAll() {
+    public ResponseEntity<List<agentSecuriteResponse>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ASResponse> findByMatricule(@RequestParam String matricule) {
+    public ResponseEntity<agentSecuriteResponse> findByMatricule(@RequestParam String matricule) {
         return ResponseEntity.ok(service.findByMatricule(matricule));
     }
 
