@@ -1,36 +1,144 @@
-# Postman / curl examples for GestionVisite API
+# Exemples de Requêtes Postman / cURL pour l'API GestionVisite
 
-Below are sample curl commands you can use to test the main flows (create visite, checkin, checkout, fetch visite). Adjust host/port if your app runs on a different address.
+Voici des exemples de requêtes que vous pouvez utiliser pour tester les points d'accès (endpoints) de votre API. La base de l'URL est assumée être `http://localhost:8080`.
 
-Base URL: http://localhost:8080
+---
 
-- Create a Visite (POST /api/v1/visites)
+### 1. Gestion des Visiteurs
 
-curl -i -X POST http://localhost:8080/api/v1/visites \
-  -H "Content-Type: application/json" \
-  -d '{"date":"29-11-2025","HEntree":"09:00","motif":"Réunion client"}'
+#### Créer un nouveau visiteur
+* **POST** `/api/v1/visiteurs`
+* **Body (application/json):**
+```json
+{
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "password": "securepassword123",
+    "role": "VISITEUR",
+    "entreprise": "Example Corp",
+    "scanDocumentPath": "/docs/john_doe_id.pdf",
+    "signaturePath": "/docs/john_doe_signature.png"
+}
+```
+* **Commande cURL:**
+```shell
+curl -X POST http://localhost:8080/api/v1/visiteurs \
+-H "Content-Type: application/json" \
+-d '{ "name": "John Doe", "email": "john.doe@example.com", "password": "securepassword123", "role": "VISITEUR", "entreprise": "Example Corp", "scanDocumentPath": "/docs/john_doe_id.pdf", "signaturePath": "/docs/john_doe_signature.png" }'
+```
 
-Expected:
-- HTTP/1.1 201 Created
-- Header `Location: /api/v1/visites/{id}` present
-- JSON body contains the created resource with `id`.
+---
 
-- Check-in a Visite (POST /api/v1/visites/{id}/checkin)
 
-curl -i -X POST http://localhost:8080/api/v1/visites/{id}/checkin
+### 2. Gestion des Rendez-vous
 
-Expected: HTTP 200 with visite JSON where `HEntree` is set.
+#### Créer un nouveau rendez-vous
+* **POST** `/api/v1/rendezvous`
+* **Body (application/json):**
+```json
+{
+    "date": "2025-12-10",
+    "heure": "14:30:00",
+    "type": "PLANIFIE",
+    "statut": true,
+    "code": "RDV-UNIQUE-CODE-123"
+}
+```
+* **Commande cURL:**
+```shell
+curl -X POST http://localhost:8080/api/v1/rendezvous \
+-H "Content-Type: application/json" \
+-d '{ "date": "2025-12-10", "heure": "14:30:00", "type": "PLANIFIE", "statut": true, "code": "RDV-UNIQUE-CODE-123" }'
+```
 
-- Check-out a Visite (POST /api/v1/visites/{id}/checkout)
+---
 
-curl -i -X POST http://localhost:8080/api/v1/visites/{id}/checkout
 
-Expected: HTTP 200 with visite JSON where `HSortie` is set.
+### 3. Gestion des Visites
 
-- Get a Visite (GET /api/v1/visites/{id})
+#### Créer une nouvelle visite
+* **POST** `/api/v1/visites`
+* **Body (application/json):**
+```json
+{
+    "date": "2025-12-10T14:30:00",
+    "hEntree": null,
+    "hSortie": null,
+    "motif": "Réunion de projet",
+    "statut": "PLANIFIEE"
+}
+```
+* **Commande cURL:**
+```shell
+curl -X POST http://localhost:8080/api/v1/visites \
+-H "Content-Type: application/json" \
+-d '{ "date": "2025-12-10T14:30:00", "motif": "Réunion de projet", "statut": "PLANIFIEE" }'
+```
 
-curl -i http://localhost:8080/api/v1/visites/{id}
+#### Enregistrer une entrée (Check-in)
+* **POST** `/api/v1/visites/{id}/checkin`
+* **Note:** Remplacez `{id}` par l'ID de la visite.
+* **Commande cURL:**
+```shell
+curl -X POST http://localhost:8080/api/v1/visites/1/checkin
+```
 
-Notes:
-- The test suite included in `src/test` uses an in-memory H2 database (profile `test`) with `spring.jpa.hibernate.ddl-auto=create-drop` so it won't affect your production DB.
-- If you run the app normally, ensure your configured datasource is available and migrations (if any) are applied before invoking these endpoints.
+#### Enregistrer une sortie (Check-out)
+* **POST** `/api/v1/visites/{id}/checkout`
+* **Note:** Remplacez `{id}` par l'ID de la visite.
+* **Commande cURL:**
+```shell
+curl -X POST http://localhost:8080/api/v1/visites/1/checkout
+```
+
+---
+
+
+### 4. Gestion des Agents de Sécurité
+
+#### Créer un nouvel agent
+* **POST** `/api/v1/agents`
+* **Body (application/json):**
+```json
+{
+    "name": "Agent Smith",
+    "email": "agent.smith@securite.com",
+    "password": "matrixpassword",
+    "role": "AGENT_SECURITE",
+    "matricule": "MAT-734"
+}
+```
+* **Commande cURL:**
+```shell
+curl -X POST http://localhost:8080/api/v1/agents \
+-H "Content-Type: application/json" \
+-d '{ "name": "Agent Smith", "email": "agent.smith@securite.com", "password": "matrixpassword", "role": "AGENT_SECURITE", "matricule": "MAT-734" }'
+```
+
+---
+
+
+### 5. Soumission de demande de RDV (par un visiteur externe)
+
+#### Créer une nouvelle soumission
+* **POST** `/api/v1/soumissions`
+* **Body (application/json):**
+```json
+{
+    "nom": "Jane",
+    "prenom": "Doe",
+    "departement": "Ressources Humaines",
+    "email": "jane.doe@visiteur.com",
+    "telephone": "0123456789",
+    "entreprise": "Visiteur Corp",
+    "motif": "Entretien d'embauche",
+    "dateRendezVous": "2025-12-15",
+    "heureRendezVous": "10:00:00"
+}
+```
+* **Commande cURL:**
+```shell
+curl -X POST http://localhost:8080/api/v1/soumissions \
+-H "Content-Type: application/json" \
+-d '{ "nom": "Jane", "prenom": "Doe", "departement": "Ressources Humaines", "email": "jane.doe@visiteur.com", "telephone": "0123456789", "entreprise": "Visiteur Corp", "motif": "Entretien d'embauche", "dateRendezVous": "2025-12-15", "heureRendezVous": "10:00:00" }'
+```

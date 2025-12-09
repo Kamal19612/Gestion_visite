@@ -58,4 +58,12 @@ public class AgentSecuriteController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    // les fonctions qui ont ete implémenter sont au nombre de 5 se sont :
+    // create agent securite
+    // get agent securite by id
+    // get all agent securite
+    // get agent securite by matricule
+    // delete agent securite by id
+    
 }

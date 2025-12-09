@@ -1,0 +1,9 @@
+target/
+.git
+.idea
+.vscode
+*.log
+*.tmp
+node_modules/
+**/Dockerfile
+**/docker-compose.yml
