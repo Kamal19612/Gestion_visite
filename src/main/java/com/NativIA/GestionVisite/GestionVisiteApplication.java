@@ -22,7 +22,7 @@ public class GestionVisiteApplication {
 
 	@Bean
 	public CommandLineRunner createDefaultUser(@Autowired userRepository userRepository,
-											   @Autowired PasswordEncoder passwordEncoder) {
+											@Autowired PasswordEncoder passwordEncoder) {
 		return args -> {
 			String defaultEmail = "user@example.com";
 			if (userRepository.findByEmail(defaultEmail).isEmpty()) {

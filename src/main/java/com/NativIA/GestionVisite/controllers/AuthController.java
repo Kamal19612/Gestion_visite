@@ -50,7 +50,11 @@ public class AuthController {
         if (!passwordEncoder.matches(request.getPassword(), u.getPassword())) return ResponseEntity.status(401).body("Invalid credentials");
         // generate JWT
         String jwt = jwtUtil.generateToken(u);
-        return ResponseEntity.ok(java.util.Map.of("token", jwt));
+        userResponse userDto = userMapper.toResponse(u);
+        java.util.Map<String, Object> response = new java.util.HashMap<>();
+        response.put("token", jwt);
+        response.put("user", userDto);
+        return ResponseEntity.ok(response);
     }
 
     @Autowired
