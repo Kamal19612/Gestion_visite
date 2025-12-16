@@ -1,6 +1,7 @@
 package com.NativIA.GestionVisite.Services.impl;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,8 +26,17 @@ public class RendezVousServiceImpl implements rendezVousService {
     @Autowired
     private RendezVousMapper rendezVousMapper;
 
+    @Autowired
+    private com.NativIA.GestionVisite.Services.ConflictDetectionService conflictDetectionService;
+
     @Override
     public rendezVousResponse create(rendezVousRequest request) {
+        // check for conflicts before creating
+        LocalDate date = LocalDate.parse(request.getDate());
+        LocalTime heure = LocalTime.parse(request.getHeure());
+        if (conflictDetectionService.hasConflict(date, heure)) {
+            throw new IllegalStateException("Conflit de rendez-vous: créneau déjà réservé");
+        }
         RendezVous r = rendezVousMapper.toEntity(request);
         return rendezVousMapper.toResponse(rendezVousRepository.save(r));
     }

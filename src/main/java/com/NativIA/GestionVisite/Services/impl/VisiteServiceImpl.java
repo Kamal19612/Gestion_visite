@@ -74,4 +74,9 @@ public class VisiteServiceImpl implements visiteService {
         return visiteMapper.toResponse(saved);
     }
 
+    @Override
+    public List<Visite> findAll() {
+        return visiteRepository.findAll();
+    }
+
 }

@@ -17,10 +17,15 @@ import com.NativIA.GestionVisite.DTO.Request.visiteRequest;
 import com.NativIA.GestionVisite.DTO.Response.visiteResponse;
 import com.NativIA.GestionVisite.Services.visiteService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/visites")
+@Tag(name = "Visites", description = "Gestion des visites de visiteurs")
 public class VisiteController {
 
     private final visiteService service;
@@ -30,6 +35,11 @@ public class VisiteController {
     }
 
     @PostMapping
+    @Operation(summary = "Créer une nouvelle visite", description = "Crée une nouvelle visite avec les informations du visiteur")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Visite créée avec succès"),
+        @ApiResponse(responseCode = "400", description = "Données invalides")
+    })
     public ResponseEntity<visiteResponse> create(@Valid @RequestBody visiteRequest req) {
         visiteResponse res = service.create(req);
         if (res != null && res.getId() != null) {
@@ -39,6 +49,11 @@ public class VisiteController {
     }
 
     @PostMapping("/{id}/checkin")
+    @Operation(summary = "Check-in d'une visite", description = "Enregistre l'heure d'entrée d'une visite")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Check-in effectué avec succès"),
+        @ApiResponse(responseCode = "404", description = "Visite non trouvée")
+    })
     public ResponseEntity<visiteResponse> checkIn(@PathVariable Long id) {
         visiteResponse res = service.checkIn(id);
         if (res == null) return ResponseEntity.notFound().build();
@@ -46,6 +61,11 @@ public class VisiteController {
     }
 
     @PostMapping("/{id}/checkout")
+    @Operation(summary = "Check-out d'une visite", description = "Enregistre l'heure de sortie d'une visite")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Check-out effectué avec succès"),
+        @ApiResponse(responseCode = "404", description = "Visite non trouvée")
+    })
     public ResponseEntity<visiteResponse> checkOut(@PathVariable Long id) {
         visiteResponse res = service.checkOut(id);
         if (res == null) return ResponseEntity.notFound().build();

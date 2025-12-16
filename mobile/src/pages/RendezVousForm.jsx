@@ -15,7 +15,7 @@ import { Save as SaveIcon } from '@mui/icons-material';
 export default function RendezVousForm() {
   const { id } = useParams();
   const isEdit = Boolean(id);
-  const [form, setForm] = useState({ titre: '', date: '', description: '' });
+  const [form, setForm] = useState({ titre: '', date: '', heure: '', description: '' });
   const [loading, setLoading] = useState(isEdit);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -32,6 +32,7 @@ export default function RendezVousForm() {
             titre: data.titre || data.subject || '',
             // Format date for input type="date"
             date: (data.date || data.scheduledAt || '').split('T')[0],
+            heure: (data.date || data.scheduledAt || '').split('T')[1]?.substring(0, 5) || '',
             description: data.description || data.note || '',
           });
         })
@@ -96,6 +97,18 @@ export default function RendezVousForm() {
           name="date"
           type="date"
           value={form.date}
+          onChange={handleChange}
+          fullWidth
+          required
+          margin="normal"
+          InputLabelProps={{ shrink: true }}
+          disabled={submitting}
+        />
+        <TextField
+          label="Heure"
+          name="heure"
+          type="time"
+          value={form.heure}
           onChange={handleChange}
           fullWidth
           required

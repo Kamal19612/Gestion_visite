@@ -61,3 +61,32 @@ export async function deleteRendezVous(id) {
 }
 
 export default api;
+
+export async function uploadSignature(visiteId, file) {
+  const form = new FormData();
+  form.append('file', file);
+  const resp = await api.post(`/v1/signatures/${visiteId}/upload`, form, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+  return resp.data;
+}
+
+export async function validateSignature(visiteId) {
+  const resp = await api.get(`/v1/signatures/${visiteId}/validate`);
+  return resp.data;
+}
+
+export async function getSignaturePath(visiteId) {
+  const resp = await api.get(`/v1/signatures/${visiteId}/path`);
+  return resp.data;
+}
+
+export async function exportReports(format='pdf') {
+  const resp = await api.get(`/v1/reports/export`, { params: { format }, responseType: 'blob' });
+  return resp.data;
+}
+
+export async function getStatsByPeriode(from, to) {
+  const resp = await api.get(`/v1/statistiques/par-periode`, { params: { from, to } });
+  return resp.data;
+}

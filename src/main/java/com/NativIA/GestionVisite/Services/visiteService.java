@@ -21,4 +21,6 @@ public interface visiteService {
 
     void delete(Long id);
 
+    List<com.NativIA.GestionVisite.Entities.Visite> findAll();
+
 }

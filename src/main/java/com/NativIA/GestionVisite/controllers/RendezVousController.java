@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.NativIA.GestionVisite.DTO.Request.rendezVousRequest;
 import com.NativIA.GestionVisite.DTO.Response.rendezVousResponse;
+import com.NativIA.GestionVisite.Services.RendezVousApprovalService;
 import com.NativIA.GestionVisite.Services.rendezVousService;
 
 import jakarta.validation.Valid;
@@ -24,18 +25,26 @@ import jakarta.validation.Valid;
 public class RendezVousController {
 
     private final rendezVousService service;
+    private final RendezVousApprovalService approvalService;
 
-    public RendezVousController(rendezVousService service) {
+    public RendezVousController(rendezVousService service, RendezVousApprovalService approvalService) {
         this.service = service;
+        this.approvalService = approvalService;
     }
 
     @PostMapping
     public ResponseEntity<rendezVousResponse> create(@Valid @RequestBody rendezVousRequest req) {
-        rendezVousResponse res = service.create(req);
-        if (res != null && res.getId() != null) {
-            return ResponseEntity.created(java.net.URI.create("/api/v1/rendezvous/" + res.getId())).body(res);
+        try {
+            rendezVousResponse res = service.create(req);
+            if (res != null && res.getId() != null) {
+                return ResponseEntity.created(java.net.URI.create("/api/v1/rendezvous/" + res.getId())).body(res);
+            }
+            return ResponseEntity.status(HttpStatus.CREATED).body(res);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 
     @GetMapping("/{id}")
@@ -57,5 +66,17 @@ public class RendezVousController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/approve")
+    public ResponseEntity<?> approve(@PathVariable Long id, @Valid @RequestBody com.NativIA.GestionVisite.DTO.Request.ApprovalRequestDTO req) {
+        com.NativIA.GestionVisite.DTO.Response.ApprovalResponseDTO res = approvalService.approveSoumission(id, req);
+        return ResponseEntity.ok(res);
+    }
+
+    @PostMapping("/{id}/reject")
+    public ResponseEntity<?> reject(@PathVariable Long id, @Valid @RequestBody com.NativIA.GestionVisite.DTO.Request.ApprovalRequestDTO req) {
+        com.NativIA.GestionVisite.DTO.Response.ApprovalResponseDTO res = approvalService.rejectSoumission(id, req);
+        return ResponseEntity.ok(res);
     }
 }

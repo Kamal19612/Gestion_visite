@@ -51,6 +51,15 @@ public class User implements java.io.Serializable {
     @Enumerated(EnumType.STRING)
     private com.NativIA.GestionVisite.Enum.Roles role;
 
+    @lombok.Builder.Default
+    @Column(nullable = false)
+    private Boolean emailVerified = false;
+
+    private String phoneNumber;
+
+    @lombok.Builder.Default
+    private Integer failedLoginAttempts = 0;
+
     // Audit fields (populated by Spring Data JPA auditing)
     @CreatedDate
     @Column(name = "created_date", updatable = false)
@@ -67,21 +76,5 @@ public class User implements java.io.Serializable {
     @LastModifiedBy
     @Column(name = "last_modified_by")
     private String lastModifiedBy;
-
-/*
-    @Column(nullable=false)
-    private Roles role; // ADMIN,VISITEUR,AGENT_SECURITE,SECRETAIRE,EMPLOYEUR 
-    // pour SECRETAIRE
-    private String departement;
-    // pour Visiteur
-    private String entreprise;
-    private String ScanDoc;
-    // pour AgentSecurite
-    private String matricule;
-    // pour Admin
-    private String privileges;
-    // pour Employeur
-    private String secteurActivite;
-*/
 
 } 

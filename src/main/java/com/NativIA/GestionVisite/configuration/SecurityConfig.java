@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.NativIA.GestionVisite.security.TokenAuthenticationFilter;
 
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Bean
@@ -31,6 +33,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/secretaire/**").hasAnyRole("SECRETAIRE","ADMIN")
                 .requestMatchers("/api/employe/**").hasAnyRole("EMPLOYEUR","ADMIN")
                 .requestMatchers("/api/visiteur/**").hasAnyRole("VISITEUR","ADMIN")
+                .requestMatchers("/api/v1/reports/**").hasAnyRole("ADMIN", "SECRETAIRE")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

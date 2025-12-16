@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login as apiLogin, getProfile } from './api';
@@ -25,7 +26,7 @@ export function AuthProvider({ children }) {
       try {
         const me = await getProfile();
         if (mounted) setUser(me);
-      } catch (err) {
+      } catch {
         // backend may not expose /auth/me; ignore silently
       } finally {
         if (mounted) setLoading(false);
@@ -48,7 +49,7 @@ export function AuthProvider({ children }) {
         setLoading(true);
         const me = await getProfile();
         setUser(me);
-      } catch (err) {
+      } catch {
         // ignore
       } finally {
         setLoading(false);
@@ -64,7 +65,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout }}>
+    <AuthContext.Provider value={{ token, user, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,77 +1,51 @@
 package com.NativIA.GestionVisite.Services.impl;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.NativIA.GestionVisite.DAO.statistiqueRepository;
 import com.NativIA.GestionVisite.DAO.visiteRepository;
 import com.NativIA.GestionVisite.DTO.Request.statistiqueRequest;
+import com.NativIA.GestionVisite.DTO.Response.StatsByDepartementResponse;
+import com.NativIA.GestionVisite.DTO.Response.StatsByEmployeResponse;
 import com.NativIA.GestionVisite.DTO.Response.statistiqueResponse;
 import com.NativIA.GestionVisite.Entities.Statistique;
+import com.NativIA.GestionVisite.Entities.Visite;
 import com.NativIA.GestionVisite.Services.statistiqueService;
 import com.NativIA.GestionVisite.mapper.StatistiqueMapper;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class StatistiqueServiceImpl implements statistiqueService {
 
-    @Autowired
-    private statistiqueRepository statistiqueRepository;
+    private final visiteRepository visiteRepository;
+    private final statistiqueRepository statistiqueRepository;
+    private final StatistiqueMapper mapper;
 
-    @Autowired
-    private StatistiqueMapper statistiqueMapper;
-
-    @Autowired
-    private visiteRepository visiteRepository;
+    public StatistiqueServiceImpl(visiteRepository visiteRepository,
+                                    statistiqueRepository statistiqueRepository,
+                                    StatistiqueMapper mapper) {
+        this.visiteRepository = visiteRepository;
+        this.statistiqueRepository = statistiqueRepository;
+        this.mapper = mapper;
+    }
 
     @Override
     public statistiqueResponse create(statistiqueRequest request) {
-        Statistique s = statistiqueMapper.toEntity(request);
-        // Calculer la durée moyenne pour la période si possible
-        try {
-            if (request.getPeriode() != null) {
-                java.time.LocalDate periode = java.time.LocalDate.parse(request.getPeriode());
-                java.time.LocalDateTime start = periode.atStartOfDay();
-                java.time.LocalDateTime end = start.plusDays(1);
-                java.util.List<com.NativIA.GestionVisite.Entities.Visite> visites = visiteRepository.findByDateBetween(start, end);
-                // calculer les durées en minutes pour les visites qui ont HEntree et HSortie
-                double avg = visites.stream()
-                        .filter(v -> v.getHEntree() != null && v.getHSortie() != null)
-                        .mapToLong(v -> java.time.Duration.between(v.getHEntree(), v.getHSortie()).toMinutes())
-                        .average()
-                        .orElse(0.0);
-                s.setDureeMoyenneMinutes(avg);
-            }
-        } catch (Exception e) {
-            // ignore parsing errors; dureeMoyenne restera nulle
-        }
-        return statistiqueMapper.toResponse(statistiqueRepository.save(s));
+        Statistique s = mapper.toEntity(request);
+        return mapper.toResponse(statistiqueRepository.save(s));
     }
 
     @Override
     public statistiqueResponse getById(Long id) {
-        return statistiqueRepository.findById(id).map(statistiqueMapper::toResponse).orElse(null);
+        return statistiqueRepository.findById(id).map(mapper::toResponse).orElse(null);
     }
 
     @Override
     public List<statistiqueResponse> getAll() {
-        return statistiqueRepository.findAll().stream().map(statistiqueMapper::toResponse).collect(Collectors.toList());
-    }
-
-    @Override
-    public statistiqueResponse findByPeriode(String periode) {
-        try {
-            java.time.format.DateTimeFormatter fmt = java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            LocalDate p = LocalDate.parse(periode, fmt);
-            return statistiqueRepository.findByPeriode(p).map(statistiqueMapper::toResponse).orElse(null);
-        } catch (Exception e) {
-            return null;
-        }
+        return statistiqueRepository.findAll().stream().map(mapper::toResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -79,4 +53,46 @@ public class StatistiqueServiceImpl implements statistiqueService {
         statistiqueRepository.deleteById(id);
     }
 
+    @Override
+    public List<statistiqueResponse> getStatsByPeriode(LocalDate from, LocalDate to) {
+        List<Visite> visites = visiteRepository.findByDateBetween(from.atStartOfDay(), to.plusDays(1).atStartOfDay());
+        Map<LocalDate, Long> visitsByDate = visites.stream()
+                .collect(Collectors.groupingBy(v -> v.getDate().toLocalDate(), Collectors.counting()));
+        List<Statistique> stats = visitsByDate.entrySet().stream()
+                .map(entry -> Statistique.builder()
+                        .periode(entry.getKey())
+                        .nombreVisites(entry.getValue().intValue())
+                        .nombreRDV(0)
+                        .nombreSoumissions(0)
+                        .dureeMoyenneMinutes(null)
+                        .build())
+                .collect(Collectors.toList());
+        List<Statistique> savedStats = stats.stream()
+                .map(statistiqueRepository::save)
+                .collect(Collectors.toList());
+        return savedStats.stream()
+                .map(mapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StatsByDepartementResponse> getStatsByDepartement() {
+        return visiteRepository.findAll().stream()
+                .filter(v -> v.getEmploye() != null && v.getEmploye().getSecteurActivite() != null)
+                .collect(Collectors.groupingBy(v -> v.getEmploye().getSecteurActivite(), Collectors.counting()))
+                .entrySet().stream()
+                .map(entry -> new StatsByDepartementResponse(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StatsByEmployeResponse> getStatsByEmploye() {
+        return visiteRepository.findAll().stream()
+                .filter(v -> v.getEmploye() != null && v.getEmploye().getName() != null)
+                .collect(Collectors.groupingBy(v -> v.getEmploye().getName(), Collectors.counting()))
+                .entrySet().stream()
+                // A better key would be employee ID, but name is used for simplicity here.
+                .map(entry -> new StatsByEmployeResponse(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+    }
 }

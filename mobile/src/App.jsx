@@ -8,6 +8,9 @@ import RendezVousForm from './pages/RendezVousForm';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
+import SignatureUpload from './pages/SignatureUpload';
+import Reports from './pages/Reports';
+import StatsByPeriod from './pages/StatsByPeriod';
 import {
   AppBar,
   Toolbar,
@@ -69,12 +72,43 @@ function AppRoutes() {
           </Protected>
         }
       />
+      <Route
+        path="/signatures"
+        element={
+          <Protected>
+            <SignatureUpload />
+          </Protected>
+        }
+      />
+      <Route
+        path="/reports"
+        element={
+          <Protected>
+            <Reports />
+          </Protected>
+        }
+      />
+      <Route
+        path="/stats"
+        element={
+          <Protected>
+            <StatsByPeriod />
+          </Protected>
+        }
+      />
     </Routes>
   );
 }
 
 function Navigation() {
-  const { token, logout } = useAuth();
+  const { token, logout, user } = useAuth();
+  const role = user?.role || null;
+  const hasRole = (r) => {
+    if (!role) return false;
+    // role might be string or object; handle both
+    const roleStr = typeof role === 'string' ? role : role.name || role.toString();
+    return roleStr.toUpperCase() === r.toUpperCase();
+  };
 
   return (
     <AppBar position="static">
@@ -92,9 +126,24 @@ function Navigation() {
             <Button color="inherit" component={RouterLink} to="/dashboard">
               Tableau de bord
             </Button>
-            <Button color="inherit" component={RouterLink} to="/rendezvous">
-              Rendez-vous
-            </Button>
+            {/* Rendez-vous: visible to visiteurs, secrétaires, employeurs, admin */}
+            {(hasRole('VISITEUR') || hasRole('SECRETAIRE') || hasRole('EMPLOYEUR') || hasRole('ADMIN')) && (
+              <Button color="inherit" component={RouterLink} to="/rendezvous">Rendez-vous</Button>
+            )}
+
+            {/* Signatures: visible to visiteurs and agents */}
+            {(hasRole('VISITEUR') || hasRole('AGENT_SECURITE') || hasRole('ADMIN')) && (
+              <Button color="inherit" component={RouterLink} to="/signatures">Signatures</Button>
+            )}
+
+            {/* Reports & Stats: visible to secrétaires and admins */}
+            {(hasRole('SECRETAIRE') || hasRole('ADMIN')) && (
+              <>
+                <Button color="inherit" component={RouterLink} to="/reports">Rapports</Button>
+                <Button color="inherit" component={RouterLink} to="/stats">Statistiques</Button>
+              </>
+            )}
+
             <Button color="inherit" onClick={logout}>
               Déconnexion
             </Button>

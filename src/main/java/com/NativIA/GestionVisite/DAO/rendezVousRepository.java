@@ -10,6 +10,8 @@ public interface rendezVousRepository extends JpaRepository<RendezVous, Long> {
 
 	java.util.List<RendezVous> findByDate(java.time.LocalDate date);
 
+	java.util.List<RendezVous> findByDateAndHeure(java.time.LocalDate date, java.time.LocalTime heure);
+
 	java.util.List<RendezVous> findBySecretaire_Id(Long secretaireId);
 
 }

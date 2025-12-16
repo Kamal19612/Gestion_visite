@@ -37,6 +37,7 @@ public class Visite implements Serializable{
     private String motif;
     @Column(nullable=false)
     private typeStatus statut;
+    private String signaturePath;
 
     //relation avec l'entité employe
     @ManyToOne  

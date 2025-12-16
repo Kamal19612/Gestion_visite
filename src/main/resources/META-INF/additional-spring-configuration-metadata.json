@@ -1,0 +1,14 @@
+{"properties": [
+  {
+      "name": "app.upload.dir",
+      "type": "java.lang.String",
+      "description": "Répertoire de stockage des signatures et documents uploadés",
+      "defaultValue": "./uploads/signatures"
+    },
+    {
+      "name": "app.max-file-size",
+      "type": "java.lang.Long",
+      "description": "Taille maximale autorisée pour les fichiers uploadés (en octets)",
+      "defaultValue": 5242880
+    }
+]}

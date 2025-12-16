@@ -1,26 +1,25 @@
 package com.NativIA.GestionVisite.controllers;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.NativIA.GestionVisite.DTO.Request.statistiqueRequest;
+import com.NativIA.GestionVisite.DTO.Response.StatsByDepartementResponse;
+import com.NativIA.GestionVisite.DTO.Response.StatsByEmployeResponse;
 import com.NativIA.GestionVisite.DTO.Response.statistiqueResponse;
 import com.NativIA.GestionVisite.Services.statistiqueService;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/statistiques")
+@Tag(name = "Statistiques", description = "Gestion et consultation des statistiques")
 public class StatistiqueController {
 
     private final statistiqueService service;
@@ -48,14 +47,32 @@ public class StatistiqueController {
         return ResponseEntity.ok(service.getAll());
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<statistiqueResponse> findByPeriode(@RequestParam String periode) {
-        return ResponseEntity.ok(service.findByPeriode(periode));
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/par-periode")
+    @Operation(summary = "Statistiques par période", description = "Récupère les statistiques des visites pour une période donnée")
+    @ApiResponse(responseCode = "200", description = "Statistiques par période récupérées")
+    public ResponseEntity<List<statistiqueResponse>> getStatsByPeriode(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+        return ResponseEntity.ok(service.getStatsByPeriode(from, to));
+    }
+
+    @GetMapping("/par-departement")
+    @Operation(summary = "Statistiques par département", description = "Récupère les statistiques aggrégées par département")
+    @ApiResponse(responseCode = "200", description = "Statistiques par département récupérées")
+    public ResponseEntity<List<StatsByDepartementResponse>> getStatsByDepartement() {
+        return ResponseEntity.ok(service.getStatsByDepartement());
+    }
+
+    @GetMapping("/par-employe")
+    @Operation(summary = "Statistiques par employé", description = "Récupère les statistiques aggrégées par employé")
+    @ApiResponse(responseCode = "200", description = "Statistiques par employé récupérées")
+    public ResponseEntity<List<StatsByEmployeResponse>> getStatsByEmploye() {
+        return ResponseEntity.ok(service.getStatsByEmploye());
     }
 }

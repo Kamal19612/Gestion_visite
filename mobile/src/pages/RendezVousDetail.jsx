@@ -28,18 +28,22 @@ export default function RendezVousDetail() {
 
   useEffect(() => {
     let mounted = true;
-    setLoading(true);
-    getRendezVousById(id)
-      .then((data) => {
+    async function fetch() {
+      if (!mounted) return;
+      setLoading(true);
+      try {
+        const data = await getRendezVousById(id);
         if (!mounted) return;
         setRv(data);
-      })
-      .catch((err) => setError(err?.response?.data?.message || err.message || 'Erreur'))
-      .finally(() => {
-          if (mounted) setLoading(false);
-      });
-      
-    return () => (mounted = false);
+      } catch (err) {
+        if (mounted) setError(err?.response?.data?.message || err.message || 'Erreur');
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+    fetch();
+
+    return () => { mounted = false; };
   }, [id]);
 
   const handleDelete = async () => {

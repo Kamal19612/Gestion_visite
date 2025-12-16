@@ -1,9 +1,11 @@
 package com.NativIA.GestionVisite.Services;
 
-import java.util.List;
-
 import com.NativIA.GestionVisite.DTO.Request.statistiqueRequest;
+import com.NativIA.GestionVisite.DTO.Response.StatsByDepartementResponse;
+import com.NativIA.GestionVisite.DTO.Response.StatsByEmployeResponse;
 import com.NativIA.GestionVisite.DTO.Response.statistiqueResponse;
+import java.time.LocalDate;
+import java.util.List;
 
 public interface statistiqueService {
 
@@ -13,7 +15,11 @@ public interface statistiqueService {
 
     List<statistiqueResponse> getAll();
 
-    statistiqueResponse findByPeriode(String periode);
+    List<statistiqueResponse> getStatsByPeriode(LocalDate from, LocalDate to);
+
+    List<StatsByDepartementResponse> getStatsByDepartement();
+
+    List<StatsByEmployeResponse> getStatsByEmploye();
 
     void delete(Long id);
 

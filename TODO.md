@@ -1,26 +1,12 @@
-# Améliorations du Code - Gestion Visite
+# TODO - Implémentation des Statistiques par Période
 
-## Fonctionnalités Manquantes
-- [ ] Implémenter le scan de documents d'identité (CNI, passeport)
-- [ ] Ajouter la signature électronique pour les visiteurs
-- [ ] Améliorer les statistiques et rapports détaillés (PDF, Excel export)
+## Étapes à Compléter
 
-## Tests et Qualité
-- [ ] Ajouter des tests unitaires pour tous les services
-- [ ] Créer des tests d'intégration complets
-- [ ] Ajouter des tests de sécurité (authentification, autorisation)
-
-## Sécurité et Performance
-- [ ] Vérifier et renforcer le chiffrement des données sensibles
-- [ ] Optimiser les performances des requêtes API
-- [ ] Ajouter des logs détaillés pour la traçabilité
-
-## Documentation
-- [ ] Documenter toutes les API avec Swagger/OpenAPI
-- [ ] Créer une documentation utilisateur
-- [ ] Ajouter des commentaires détaillés dans le code
-
-## Architecture
-- [ ] Vérifier la conformité avec les technologies spécifiées (Angular pour web si nécessaire)
-- [ ] Optimiser la structure des DTO et entités
-- [ ] Améliorer la gestion des erreurs et exceptions
+- [x] Modifier la méthode `getStatsByPeriode` dans `StatistiqueServiceImpl.java` pour agréger les visites par date.
+- [x] Pour chaque date dans la période, créer un objet `Statistique` avec :
+  - `periode` : la date.
+  - `nombreVisites` : le nombre de visites ce jour-là.
+  - Autres champs (`nombreRDV`, `nombreSoumissions`, `dureeMoyenneMinutes`) initialisés à 0 ou null.
+- [x] Sauvegarder chaque `Statistique` en base via `statistiqueRepository.save`.
+- [x] Mapper les objets `Statistique` vers `statistiqueResponse` et retourner la liste.
+- [ ] Tester l'implémentation pour s'assurer qu'elle fonctionne correctement.
