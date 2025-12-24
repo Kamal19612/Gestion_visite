@@ -12,7 +12,7 @@ public class EmployeMapper {
     public Employe toEntity(employeRequest req) {
         if (req == null) return null;
         Employe e = Employe.builder()
-                .name(req.getName())
+                .name(((req.getFirstName() != null ? req.getFirstName().trim() : "") + " " + (req.getLastName() != null ? req.getLastName().trim() : "")).trim())
                 .email(req.getEmail())
                 .password(req.getPassword())
                 .secteurActivite(req.getSecteurActivite())
@@ -32,7 +32,15 @@ public class EmployeMapper {
 
     public void updateEntity(Employe target, employeRequest req) {
         if (target == null || req == null) return;
-        if (req.getName() != null) target.setName(req.getName());
+        if (req.getFirstName() != null || req.getLastName() != null) {
+            String existing = target.getName() != null ? target.getName() : "";
+            String[] parts = existing.split(" ", 2);
+            String existingFirst = parts.length > 0 ? parts[0] : "";
+            String existingLast = parts.length > 1 ? parts[1] : "";
+            String newFirst = req.getFirstName() != null ? req.getFirstName().trim() : existingFirst;
+            String newLast = req.getLastName() != null ? req.getLastName().trim() : existingLast;
+            target.setName((newFirst + " " + newLast).trim());
+        }
         if (req.getEmail() != null) target.setEmail(req.getEmail());
         if (req.getPassword() != null) target.setPassword(req.getPassword());
         if (req.getSecteurActivite() != null) target.setSecteurActivite(req.getSecteurActivite());

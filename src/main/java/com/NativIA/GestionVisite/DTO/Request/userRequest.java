@@ -19,9 +19,13 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class userRequest {
 
+    @NotBlank(message = "Le prénom est requis")
+    @Size(min = 2, max = 100, message = "Le prénom doit contenir entre 2 et 100 caractères")
+    private String firstName;
+
     @NotBlank(message = "Le nom est requis")
     @Size(min = 2, max = 100, message = "Le nom doit contenir entre 2 et 100 caractères")
-    private String name;
+    private String lastName;
 
     @NotBlank(message = "L'email est requis")
     @Email(message = "Email invalide")
@@ -30,6 +34,11 @@ public class userRequest {
     @NotBlank(message = "Le mot de passe est requis")
     @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
     private String password;
+
+    @NotBlank(message = "La confirmation du mot de passe est requise")
+    private String confirmPassword;
+
+    private String whatsapp;
 
     private Roles role;
 

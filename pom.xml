@@ -95,11 +95,11 @@
 		</dependency>
 		<!-- AWS S3 -->
 		<!-- DISABLED FOR NOW - Use local filesystem storage -->
-		<!-- <dependency>
+		<dependency>
 			<groupId>software.amazon.awssdk</groupId>
 			<artifactId>s3</artifactId>
 			<version>2.20.100</version>
-		</dependency> -->
+		</dependency>
 		<!-- Email Service -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

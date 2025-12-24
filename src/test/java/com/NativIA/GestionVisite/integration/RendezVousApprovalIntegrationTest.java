@@ -23,18 +23,18 @@ import com.NativIA.GestionVisite.Entities.SoumissionRDV;
 @AutoConfigureMockMvc
 public class RendezVousApprovalIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @Autowired
-    private soumissionRepository soumissionRepository;
+        @Autowired
+        private soumissionRepository soumissionRepository;
 
 
 
-    @Test
-    @Transactional
-    @WithMockUser(roles = "SECRETAIRE")
-    public void approveEndpoint_updatesStatusAndReturnsResponse() throws Exception {
+        @Test
+        @Transactional
+        @WithMockUser(roles = "SECRETAIRE")
+        public void approveEndpoint_updatesStatusAndReturnsResponse() throws Exception {
         SoumissionRDV s = SoumissionRDV.builder()
                 .nom("Doe")
                 .prenom("John")
@@ -60,12 +60,12 @@ public class RendezVousApprovalIntegrationTest {
 
         SoumissionRDV updated = soumissionRepository.findById(saved.getIdSoumission()).orElseThrow();
         assertThat(updated.getStatut()).isEqualTo("Approuvée");
-    }
+        }
 
-    @Test
-    @Transactional
-    @WithMockUser(roles = "SECRETAIRE")
-    public void rejectEndpoint_updatesStatusAndReturnsResponse() throws Exception {
+        @Test
+        @Transactional
+        @WithMockUser(roles = "SECRETAIRE")
+        public void rejectEndpoint_updatesStatusAndReturnsResponse() throws Exception {
         SoumissionRDV s = SoumissionRDV.builder()
                 .nom("Smith")
                 .prenom("Anna")
@@ -91,7 +91,7 @@ public class RendezVousApprovalIntegrationTest {
 
         SoumissionRDV updated = soumissionRepository.findById(saved.getIdSoumission()).orElseThrow();
         assertThat(updated.getStatut()).isEqualTo("Rejetée");
-    }
+        }
 
 
 }

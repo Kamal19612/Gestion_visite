@@ -1,12 +1,22 @@
-# TODO - Implémentation des Statistiques par Période
+# TODO: Nettoyer le projet backend
 
-## Étapes à Compléter
-
-- [x] Modifier la méthode `getStatsByPeriode` dans `StatistiqueServiceImpl.java` pour agréger les visites par date.
-- [x] Pour chaque date dans la période, créer un objet `Statistique` avec :
-  - `periode` : la date.
-  - `nombreVisites` : le nombre de visites ce jour-là.
-  - Autres champs (`nombreRDV`, `nombreSoumissions`, `dureeMoyenneMinutes`) initialisés à 0 ou null.
-- [x] Sauvegarder chaque `Statistique` en base via `statistiqueRepository.save`.
-- [x] Mapper les objets `Statistique` vers `statistiqueResponse` et retourner la liste.
-- [ ] Tester l'implémentation pour s'assurer qu'elle fonctionne correctement.
+- [ ] Supprimer le dossier VisitePulse/
+- [ ] Supprimer le dossier signatures/
+- [ ] Supprimer le dossier docs/
+- [ ] Supprimer le fichier ANALYSE_CONFORMITE.md
+- [ ] Supprimer le fichier api_test_output.txt
+- [ ] Supprimer le fichier backup_gestionvisite.dump
+- [ ] Supprimer le fichier BILAN_COMPLET.md
+- [ ] Supprimer le fichier Cahier des Charges - Application de Gestion des Visites en Entreprise.pdf
+- [ ] Supprimer le fichier DESCRIPTION USE CASE.pdf
+- [ ] Supprimer le fichier Diagramme Classe (1).pdf
+- [ ] Supprimer le fichier Diagramme Classe.png
+- [ ] Supprimer le fichier IMPLEMENTATION_NOTES.md
+- [ ] Supprimer le fichier IMPLEMENTATION_PHASES.md
+- [ ] Supprimer le fichier package-lock.json
+- [ ] Supprimer le fichier README.md
+- [ ] Supprimer le fichier temp_test_api.ps1
+- [ ] Supprimer le fichier TODO.md
+- [ ] Supprimer le fichier Use case diagram.png
+- [ ] Vérifier les suppressions
+- [ ] Tester le backend

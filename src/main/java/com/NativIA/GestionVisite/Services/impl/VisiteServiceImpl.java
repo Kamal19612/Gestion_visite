@@ -69,7 +69,7 @@ public class VisiteServiceImpl implements visiteService {
         Visite v = visiteRepository.findById(id).orElse(null);
         if (v == null) return null;
         v.setHSortie(java.time.LocalDateTime.now());
-        v.setStatut(com.NativIA.GestionVisite.Enum.typeStatus.TERMINER);
+        v.setStatut(com.NativIA.GestionVisite.Enum.typeStatus.TERMINEE);
         Visite saved = visiteRepository.save(v);
         return visiteMapper.toResponse(saved);
     }

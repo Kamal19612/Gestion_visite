@@ -62,6 +62,15 @@ public class RendezVousServiceImpl implements rendezVousService {
     }
 
     @Override
+    public List<rendezVousResponse> findByVisiteurEmail(String email) {
+        try {
+            return rendezVousRepository.findByVisiteur_Email(email).stream().map(rendezVousMapper::toResponse).collect(Collectors.toList());
+        } catch (Exception e) {
+            return List.of();
+        }
+    }
+
+    @Override
     public void delete(Long id) {
         rendezVousRepository.deleteById(id);
     }

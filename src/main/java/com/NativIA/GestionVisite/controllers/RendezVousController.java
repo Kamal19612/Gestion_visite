@@ -57,6 +57,16 @@ public class RendezVousController {
         return ResponseEntity.ok(service.getAll());
     }
 
+    @GetMapping("/mine")
+    public ResponseEntity<List<rendezVousResponse>> getMyRendezVous() {
+        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getName() == null) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).body(List.of());
+        }
+        String email = auth.getName();
+        return ResponseEntity.ok(service.findByVisiteurEmail(email));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<List<rendezVousResponse>> findByDate(@RequestParam String date) {
         return ResponseEntity.ok(service.findByDate(date));
@@ -70,13 +80,13 @@ public class RendezVousController {
 
     @PostMapping("/{id}/approve")
     public ResponseEntity<?> approve(@PathVariable Long id, @Valid @RequestBody com.NativIA.GestionVisite.DTO.Request.ApprovalRequestDTO req) {
-        com.NativIA.GestionVisite.DTO.Response.ApprovalResponseDTO res = approvalService.approveSoumission(id, req);
+        com.NativIA.GestionVisite.DTO.Response.ApprovalResponseDTO res = approvalService.approveRendezVous(id, req);
         return ResponseEntity.ok(res);
     }
 
     @PostMapping("/{id}/reject")
     public ResponseEntity<?> reject(@PathVariable Long id, @Valid @RequestBody com.NativIA.GestionVisite.DTO.Request.ApprovalRequestDTO req) {
-        com.NativIA.GestionVisite.DTO.Response.ApprovalResponseDTO res = approvalService.rejectSoumission(id, req);
+        com.NativIA.GestionVisite.DTO.Response.ApprovalResponseDTO res = approvalService.rejectRendezVous(id, req);
         return ResponseEntity.ok(res);
     }
 }

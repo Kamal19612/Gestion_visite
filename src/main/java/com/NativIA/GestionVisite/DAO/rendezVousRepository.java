@@ -14,4 +14,6 @@ public interface rendezVousRepository extends JpaRepository<RendezVous, Long> {
 
 	java.util.List<RendezVous> findBySecretaire_Id(Long secretaireId);
 
+	java.util.List<RendezVous> findByVisiteur_Email(String email);
+
 }

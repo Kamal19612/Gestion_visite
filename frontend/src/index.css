@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global styles */
+html, body, #root {
+	height: 100%;
+}
+body {
+	background-color: #f8fafc; /* light slate */
+	color: #0f172a;
+	font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+	margin: 0;
+}
+
+/* Basic utilities used by components */
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 1rem;
+}
+
+.btn-primary {
+	display: inline-block;
+	padding: 0.5rem 1rem;
+	background: #4f46e5;
+	color: white;
+	border-radius: 6px;
+	text-decoration: none;
+}
+

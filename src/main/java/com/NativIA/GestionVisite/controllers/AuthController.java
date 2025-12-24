@@ -68,9 +68,13 @@ public class AuthController {
             return ResponseEntity.badRequest().body(Map.of("error", "Email déjà utilisé"));
         }
 
+        if (request.getPassword() == null || !request.getPassword().equals(request.getConfirmPassword())) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Les mots de passe ne correspondent pas"));
+        }
+
         try {
             User u = userMapper.toEntity(request);
-            // Ensure self-registration can only create VISITEUR accounts
+            // Ensure self-registration defaults to VISITEUR
             u.setRole(Roles.VISITEUR);
             u.setPassword(passwordEncoder.encode(request.getPassword()));
             u.setEmailVerified(false);
@@ -78,7 +82,7 @@ public class AuthController {
 
             // Generate and send verification code
             String verificationCode = verificationCodeService.generateVerificationCode(saved.getEmail());
-            
+
             if (emailService != null) {
                 emailService.sendVerificationCodeEmail(saved.getEmail(), verificationCode);
                 log.info("Verification code sent to: {}", saved.getEmail());
@@ -88,9 +92,9 @@ public class AuthController {
 
             userResponse resp = userMapper.toResponse(saved);
             return ResponseEntity.ok(Map.of(
-                "message", "Inscription réussie. Veuillez vérifier votre email pour confirmer votre compte.",
-                "user", resp,
-                "requiresVerification", true
+                    "message", "Inscription réussie. Veuillez vérifier votre email pour confirmer votre compte.",
+                    "user", resp,
+                    "requiresVerification", true
             ));
 
         } catch (Exception e) {
@@ -118,6 +122,9 @@ public class AuthController {
                 u.setEmailVerified(true);
                 userRepository.save(u);
                 verificationCodeService.markEmailAsVerified(email);
+                if (emailService != null) {
+                    emailService.sendEmail(email, "Compte confirmé - GestionVisite", "Votre compte a été confirmé avec succès.");
+                }
                 return ResponseEntity.ok(Map.of("message", "Email vérifié avec succès"));
             }
 
@@ -139,7 +146,7 @@ public class AuthController {
             }
 
             String verificationCode = verificationCodeService.generateVerificationCode(email);
-            
+
             if (emailService != null) {
                 emailService.sendVerificationCodeEmail(email, verificationCode);
                 return ResponseEntity.ok(Map.of("message", "Code de vérification renvoyé"));
@@ -169,6 +176,26 @@ public class AuthController {
             if (!passwordEncoder.matches(request.getPassword(), u.getPassword())) {
                 u.setFailedLoginAttempts(u.getFailedLoginAttempts() + 1);
                 userRepository.save(u);
+
+                // If failed attempts reached 3, notify admins
+                if (u.getFailedLoginAttempts() != null && u.getFailedLoginAttempts() >= 3) {
+                    try {
+                        if (emailService != null) {
+                            java.util.List<com.NativIA.GestionVisite.Entities.User> admins = userRepository.findAll().stream()
+                                    .filter(x -> x.getRole() == Roles.ADMIN)
+                                    .toList();
+                            for (var admin : admins) {
+                                if (admin.getEmail() != null) {
+                                    emailService.sendEmail(admin.getEmail(), "Alerte tentatives de connexion", "L'utilisateur " + u.getEmail() + " a échoué 3 tentatives de connexion.");
+                                }
+                            }
+                        }
+                    } catch (Exception ex) {
+                        // ignore notification failures
+                    }
+
+                }
+
                 return ResponseEntity.status(401).body(Map.of("error", "Invalid credentials"));
             }
 
@@ -179,8 +206,8 @@ public class AuthController {
             String jwt = jwtUtil.generateToken(u);
             userResponse userDto = userMapper.toResponse(u);
             return ResponseEntity.ok(Map.of(
-                "token", jwt,
-                "user", userDto
+                    "token", jwt,
+                    "user", userDto
             ));
 
         } catch (Exception e) {
@@ -194,9 +221,13 @@ public class AuthController {
     public ResponseEntity<?> me() {
         try {
             org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
-            if (auth == null || auth.getName() == null) return ResponseEntity.status(401).body(Map.of("error", "Not authenticated"));
+            if (auth == null || auth.getName() == null) {
+                return ResponseEntity.status(401).body(Map.of("error", "Not authenticated"));
+            }
             var userOpt = userRepository.findByEmail(auth.getName());
-            if (userOpt.isEmpty()) return ResponseEntity.status(404).body(Map.of("error", "User not found"));
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.status(404).body(Map.of("error", "User not found"));
+            }
             userResponse resp = userMapper.toResponse(userOpt.get());
             return ResponseEntity.ok(resp);
         } catch (Exception e) {

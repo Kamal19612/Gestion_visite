@@ -102,6 +102,7 @@ CREATE TABLE IF NOT EXISTS rendez_vous (
     statut BOOLEAN,
     code VARCHAR(255) UNIQUE,
     visite_id BIGINT,
+    visiteur_id BIGINT,
     statistique_id BIGINT,
     secretaire_id BIGINT
 );
@@ -114,6 +115,11 @@ BEGIN
     END IF;
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_rdv_statistique') THEN
         ALTER TABLE rendez_vous ADD CONSTRAINT fk_rdv_statistique FOREIGN KEY (statistique_id) REFERENCES statistiques(id);
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'users') THEN
+        IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_rdv_visiteur') THEN
+            ALTER TABLE rendez_vous ADD CONSTRAINT fk_rdv_visiteur FOREIGN KEY (visiteur_id) REFERENCES users(id);
+        END IF;
     END IF;
     IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'users') THEN
         IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_rdv_secretaire') THEN

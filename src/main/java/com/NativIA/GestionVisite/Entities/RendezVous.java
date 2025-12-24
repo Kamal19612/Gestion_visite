@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name="rendezVous")
+@Table(name="rendez_vous")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,23 +34,23 @@ public class RendezVous implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long idRDV;
     
-    @Column(nullable=false)
+    @Column(name = "rdv_date", nullable=false)
     private LocalDate date;
 
-    @Column(nullable=false)
+    @Column(name = "rdv_heure", nullable=false)
     private LocalTime heure;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "type_rdv")
     private TypeRDV type;
 
-    private Boolean statut;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255) default 'EN_ATTENTE'")
+    private com.NativIA.GestionVisite.Enum.typeStatus statut;
 
     @Column(unique = true)
     private String code;
 
-    // relation avec visite
-    @ManyToOne
-    private Visite visite;
     // relation avec statistique
     @ManyToOne
     private Statistique statistique;
@@ -60,5 +60,13 @@ public class RendezVous implements java.io.Serializable {
     // relation avec soumissionRDV
     @OneToOne(mappedBy = "rendezVous", cascade=jakarta.persistence.CascadeType.ALL, fetch=jakarta.persistence.FetchType.LAZY)
     private SoumissionRDV soumissionRDV;
+
+    // relation avec visite
+    @ManyToOne
+    private Visite visite;
+
+    @ManyToOne
+    @jakarta.persistence.JoinColumn(name = "visiteur_id")
+    private Visiteur visiteur;
 
 }

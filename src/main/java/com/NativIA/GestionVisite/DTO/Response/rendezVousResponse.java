@@ -16,10 +16,11 @@ public class rendezVousResponse {
     private String date;
     private String heure;
     private String type;
-    private Boolean statut;
+    private String statut;
     private String code;
     private Long visiteId;
     private Long statistiqueId;
     private Long secretaireId;
     private Long soumissionRDVId;
+    private Long visiteurId;
 }

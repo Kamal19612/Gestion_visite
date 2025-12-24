@@ -30,7 +30,7 @@ public class GestionVisiteApplication {
 				u.setName("Default User");
 				u.setEmail(defaultEmail);
 				u.setPassword(passwordEncoder.encode("Password123!"));
-				u.setRole(Roles.VISITEUR);
+				u.setRole(Roles.ADMIN);
 				userRepository.save(u);
 				System.out.println("Default user created: email=user@example.com password=Password123!");
 			}

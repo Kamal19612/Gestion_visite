@@ -1,4 +1,4 @@
--- V3: Ajouter les colonnes manquantes à la table Visites si nécessaire
+-- V3: Ajouter les colonnes manquantes à la table visites si nécessaire
 -- Vérifier et ajouter signaturePath si elle n'existe pas
 
 DO $$
@@ -11,8 +11,8 @@ BEGIN
         NULL;
     ELSE
         -- Ajouter la colonne
-        ALTER TABLE "Visites" ADD COLUMN "signaturePath" VARCHAR(500);
-        COMMENT ON COLUMN "Visites"."signaturePath" IS 'Chemin du fichier de signature électronique de la visite';
+        ALTER TABLE visites ADD COLUMN IF NOT EXISTS signature_path VARCHAR(500);
+        COMMENT ON COLUMN visites.signature_path IS 'Chemin du fichier de signature électronique de la visite';
     END IF;
 END$$;
 

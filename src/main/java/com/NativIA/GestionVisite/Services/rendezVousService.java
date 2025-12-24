@@ -15,6 +15,8 @@ public interface rendezVousService {
 
     List<rendezVousResponse> findByDate(String date);
 
+    List<rendezVousResponse> findByVisiteurEmail(String email);
+
     void delete(Long id);
 
 }

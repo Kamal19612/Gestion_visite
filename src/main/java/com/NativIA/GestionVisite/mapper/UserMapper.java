@@ -11,11 +11,14 @@ public class UserMapper {
 
     public User toEntity(userRequest req) {
         if (req == null) return null;
+        String fullName = (req.getFirstName() != null ? req.getFirstName().trim() : "") + " " + 
+                         (req.getLastName() != null ? req.getLastName().trim() : "");
         User u = User.builder()
-                .name(req.getName())
+                .name(fullName.trim())
                 .email(req.getEmail())
                 .password(req.getPassword())
                 .role(req.getRole())
+                .phoneNumber(req.getWhatsapp())
                 .build();
         return u;
     }
@@ -32,10 +35,15 @@ public class UserMapper {
 
     public void updateEntity(User target, userRequest req) {
         if (target == null || req == null) return;
-        if (req.getName() != null) target.setName(req.getName());
+        if (req.getFirstName() != null || req.getLastName() != null) {
+            String fullName = (req.getFirstName() != null ? req.getFirstName().trim() : "") + " " + 
+                             (req.getLastName() != null ? req.getLastName().trim() : "");
+            target.setName(fullName.trim());
+        }
         if (req.getEmail() != null) target.setEmail(req.getEmail());
         if (req.getPassword() != null) target.setPassword(req.getPassword());
         if (req.getRole() != null) target.setRole(req.getRole());
+        if (req.getWhatsapp() != null) target.setPhoneNumber(req.getWhatsapp());
     }
 
 }

@@ -6,25 +6,17 @@ import com.NativIA.GestionVisite.DTO.Response.ApprovalResponseDTO;
 public interface RendezVousApprovalService {
 
     /**
-     * Approuve une soumission de rendez-vous
-     * @param idSoumission ID de la soumission
-     * @param approvalRequest Détails de l'approbation
-     * @return ApprovalResponseDTO avec les détails de l'approbation
+     * Approuve un rendez-vous
      */
-    ApprovalResponseDTO approveSoumission(Long idSoumission, ApprovalRequestDTO approvalRequest);
+    ApprovalResponseDTO approveRendezVous(Long idRendezVous, ApprovalRequestDTO approvalRequest);
 
     /**
-     * Rejette une soumission de rendez-vous
-     * @param idSoumission ID de la soumission
-     * @param rejectionRequest Raison du rejet
-     * @return ApprovalResponseDTO avec les détails du rejet
+     * Rejette un rendez-vous
      */
-    ApprovalResponseDTO rejectSoumission(Long idSoumission, ApprovalRequestDTO rejectionRequest);
+    ApprovalResponseDTO rejectRendezVous(Long idRendezVous, ApprovalRequestDTO rejectionRequest);
 
     /**
-     * Récupère le statut d'une soumission
-     * @param idSoumission ID de la soumission
-     * @return Statut actuel
+     * Récupère le statut
      */
-    String getSoumissionStatus(Long idSoumission);
+    String getRendezVousStatus(Long idRendezVous);
 }

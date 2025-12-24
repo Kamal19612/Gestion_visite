@@ -21,7 +21,7 @@ public class rendezVousRequest {
     private String heure;
 
     private String type;
-    private Boolean statut;
+    private String statut;
     private String code;
 
 }

@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name= "Statistiques")
+@Table(name= "statistiques")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,14 +29,14 @@ public class Statistique implements java.io.Serializable {
     private Long id;
     @Column(nullable=false)
     private LocalDate periode;
-    @Column(nullable=false)
+    @Column(name = "nombre_visites", nullable=false)
     private int nombreVisites;
-    @Column(nullable=false)
+    @Column(name = "nombre_rdv", nullable=false)
     private int nombreRDV;
-    @Column(nullable=false)
+    @Column(name = "nombre_soumissions", nullable=false)
     private int nombreSoumissions;
 
-    @Column
+    @Column(name = "duree_moyenne_minutes")
     private Double dureeMoyenneMinutes;
 
     // relation avec visite

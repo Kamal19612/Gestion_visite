@@ -1,64 +1,40 @@
 package com.NativIA.GestionVisite.configuration;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.NativIA.GestionVisite.security.TokenAuthenticationFilter;
+import com.NativIA.GestionVisite.security.JwtAuthenticationFilter;
 
 @Configuration
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/agent/**", "/api/agent-securite/**", "/api/agentsecurite/**").hasAnyRole("AGENT_SECURITE","ADMIN")
-                .requestMatchers("/api/secretaire/**").hasAnyRole("SECRETAIRE","ADMIN")
-                .requestMatchers("/api/employe/**").hasAnyRole("EMPLOYEUR","ADMIN")
-                .requestMatchers("/api/visiteur/**").hasAnyRole("VISITEUR","ADMIN")
-                .requestMatchers("/api/v1/reports/**").hasAnyRole("ADMIN", "SECRETAIRE")
-                .anyRequest().authenticated()
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtFilter) throws Exception {
+        http
+            // Active CORS en utilisant le bean corsConfigurationSource défini dans CorsConfig
+            .cors(Customizer.withDefaults())
+            // Désactive CSRF car nous utilisons des tokens JWT (stateless)
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll() // Endpoints publics
+                .anyRequest().authenticated() // Tout le reste nécessite une authentification
             )
-            .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        // Allow Vite dev server origins (5173) and existing 5174 if used.
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        // Allow common headers used by browsers and Axios; allow all simple headers as wildcard
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
-        return source;
+        return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    @Autowired
-    private TokenAuthenticationFilter tokenAuthenticationFilter;
 }

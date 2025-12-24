@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.NativIA.GestionVisite.DAO.secretaireRepository;
 import com.NativIA.GestionVisite.DAO.soumissionRepository;
 import com.NativIA.GestionVisite.DTO.Request.soumissionRequest;
 import com.NativIA.GestionVisite.DTO.Response.soumissionResponse;
@@ -24,10 +25,31 @@ public class SoumissionServiceImpl implements soumissionService {
     @Autowired
     private SoumissionMapper soumissionMapper;
 
+    @Autowired(required = false)
+    private com.NativIA.GestionVisite.Services.EmailService emailService;
+
+    @Autowired
+    private secretaireRepository secretaireRepository;
+
     @Override
     public soumissionResponse create(soumissionRequest request) {
         SoumissionRDV s = soumissionMapper.toEntity(request);
-        return soumissionMapper.toResponse(soumissionRepository.save(s));
+        SoumissionRDV saved = soumissionRepository.save(s);
+
+        // Notify secretaries for the department
+        try {
+            java.util.List<com.NativIA.GestionVisite.Entities.Secretaire> secretaires = secretaireRepository.findByDepartement(request.getDepartement());
+            String visitorName = request.getNom() + " " + request.getPrenom();
+            for (var sec : secretaires) {
+                if (sec.getEmail() != null && emailService != null) {
+                    emailService.sendSecretaryNotificationEmail(sec.getEmail(), visitorName, request.getDateRendezVous(), request.getHeureRendezVous());
+                }
+            }
+        } catch (Exception e) {
+            // log and continue
+        }
+
+        return soumissionMapper.toResponse(saved);
     }
 
     @Override

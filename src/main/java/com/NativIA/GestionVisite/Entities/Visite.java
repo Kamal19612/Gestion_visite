@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name="Visites")
+@Table(name="visites")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,14 +29,17 @@ public class Visite implements Serializable{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable=false)
+    @Column(name = "visite_date", nullable=false)
     private LocalDateTime date;
+    @Column(name = "h_entree")
     private LocalDateTime hEntree;
+    @Column(name = "h_sortie")
     private LocalDateTime hSortie;
     @Column(nullable=false)
     private String motif;
     @Column(nullable=false)
     private typeStatus statut;
+    @Column(name = "signature_path")
     private String signaturePath;
 
     //relation avec l'entité employe
