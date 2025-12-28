@@ -20,22 +20,47 @@ export default function OnsiteAppointment() {
       setTimeout(() => navigate('/agent/dashboard'), 2000);
     },
     onError: (err) => {
-      setServerError(err?.response?.data?.message || 'Erreur lors de la création du rendez-vous.');
+      // Afficher un message d'erreur plus détaillé
+      const errorMessage = err?.response?.data?.message || 
+                          err?.response?.data?.error || 
+                          err?.message || 
+                          'Erreur lors de la création du rendez-vous.';
+      setServerError(errorMessage);
       setSuccessMessage('');
+      console.error('Erreur création rendez-vous:', err);
     }
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     setServerError('');
     setSuccessMessage('');
 
-    // Basic client-side validation
-    if (!data.visitorFirstName || !data.visitorLastName || !data.visitorEmail || !data.appointmentDate || !data.appointmentTime || !data.motif) {
+    // Validation des champs obligatoires
+    if (!data.visitorFirstName || !data.visitorLastName || !data.visitorEmail || 
+        !data.appointmentDate || !data.appointmentTime || !data.motif ||
+        !data.personneARencontrer || !data.departement) {
       setServerError('Veuillez remplir tous les champs obligatoires.');
       return;
     }
 
-    mutation.mutate(data);
+    // Transformer les données pour correspondre au format attendu par le backend
+    const appointmentData = {
+      date: data.appointmentDate, // Backend attend "date" pas "appointmentDate"
+      heure: data.appointmentTime, // Backend attend "heure" pas "appointmentTime"
+      motif: data.motif,
+      personneARencontrer: data.personneARencontrer,
+      departement: data.departement,
+      type: data.type || null, // Optionnel
+      statut: data.statut || null, // Optionnel, sera défini par le backend si null
+      code: data.code || null, // Optionnel
+      // Informations du visiteur pour permettre à l'agent de créer un rendez-vous
+      visiteurEmail: data.visitorEmail || null, // Email du visiteur (obligatoire si agent)
+      visiteurFirstName: data.visitorFirstName || null, // Prénom du visiteur (pour création si nécessaire)
+      visiteurLastName: data.visitorLastName || null, // Nom du visiteur (pour création si nécessaire)
+      visiteurWhatsapp: data.visitorWhatsapp || null // WhatsApp du visiteur (optionnel)
+    };
+
+    mutation.mutate(appointmentData);
   };
 
   return (
@@ -64,12 +89,13 @@ export default function OnsiteAppointment() {
           />
         </div>
         <Input 
-          label="E-mail du Visiteur (optionnel)" 
+          label="E-mail du Visiteur *" 
           name="visitorEmail" 
           type="email" 
-          register={register({
+          register={register({ 
+            required: 'L\'email du visiteur est requis',
             pattern: {
-              value: /^[^S@]+@[^S@]+\.[^S@]+$/,
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
               message: 'Adresse e-mail invalide'
             }
           })}
@@ -101,7 +127,7 @@ export default function OnsiteAppointment() {
           />
         </div>
         <div>
-          <label htmlFor="motif" className="block text-sm font-medium text-gray-700 mb-1">Motif du rendez-vous</label>
+          <label htmlFor="motif" className="block text-sm font-medium text-gray-700 mb-1">Motif du rendez-vous *</label>
           <textarea
             id="motif"
             {...register("motif", { required: 'Le motif du rendez-vous est requis' })}
@@ -110,6 +136,20 @@ export default function OnsiteAppointment() {
           ></textarea>
           {errors.motif && <p className="mt-1 text-sm text-red-600">{errors.motif.message}</p>}
         </div>
+        <Input 
+          label="Personne à rencontrer *" 
+          name="personneARencontrer" 
+          type="text" 
+          register={register({ required: 'La personne à rencontrer est requise' })}
+          error={errors.personneARencontrer?.message}
+        />
+        <Input 
+          label="Département *" 
+          name="departement" 
+          type="text" 
+          register={register({ required: 'Le département est requis' })}
+          error={errors.departement?.message}
+        />
         
         <div className="flex justify-end mt-6">
           <Button type="submit" disabled={mutation.isPending}>

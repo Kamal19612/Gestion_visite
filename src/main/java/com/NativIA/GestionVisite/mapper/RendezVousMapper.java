@@ -1,14 +1,16 @@
 package com.NativIA.GestionVisite.mapper;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
+
+import org.springframework.stereotype.Component;
+
 import com.NativIA.GestionVisite.DTO.Request.rendezVousRequest;
 import com.NativIA.GestionVisite.DTO.Response.rendezVousResponse;
 import com.NativIA.GestionVisite.Entities.RendezVous;
 import com.NativIA.GestionVisite.Enum.TypeRDV;
-import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
+import com.NativIA.GestionVisite.Enum.TypeStatus;
 
 @Component
 public class RendezVousMapper {
@@ -20,8 +22,11 @@ public class RendezVousMapper {
         return RendezVous.builder()
                 .date(LocalDate.parse(req.getDate()))
                 .heure(LocalTime.parse(req.getHeure()))
+                .motif(req.getMotif())
+                .personneARencontrer(req.getPersonneARencontrer())
+                .departement(req.getDepartement())
                 .type(req.getType() != null ? TypeRDV.valueOf(req.getType().toUpperCase()) : null)
-                .statut(req.getStatut() != null ? com.NativIA.GestionVisite.Enum.typeStatus.valueOf(req.getStatut()) : com.NativIA.GestionVisite.Enum.typeStatus.EN_ATTENTE)
+                .statut(req.getStatut() != null ? TypeStatus.valueOf(req.getStatut()) : TypeStatus.EN_ATTENTE)
                 .code(req.getCode())
                 .build();
     }
@@ -43,6 +48,15 @@ public class RendezVousMapper {
         }
         if (r.getType() != null) {
             respBuilder.type(r.getType().name());
+        }
+        if (r.getMotif() != null) {
+            respBuilder.motif(r.getMotif());
+        }
+        if (r.getPersonneARencontrer() != null) {
+            respBuilder.personneARencontrer(r.getPersonneARencontrer());
+        }
+        if (r.getDepartement() != null) {
+            respBuilder.departement(r.getDepartement());
         }
 
         if (r.getVisite() != null) {
@@ -78,7 +92,7 @@ public class RendezVousMapper {
             target.setType(TypeRDV.valueOf(req.getType().toUpperCase()));
         }
         if (req.getStatut() != null) {
-            target.setStatut(com.NativIA.GestionVisite.Enum.typeStatus.valueOf(req.getStatut()));
+            target.setStatut(TypeStatus.valueOf(req.getStatut()));
         }
         if (req.getCode() != null) {
             target.setCode(req.getCode());

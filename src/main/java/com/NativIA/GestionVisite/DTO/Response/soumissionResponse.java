@@ -19,6 +19,7 @@ public class soumissionResponse {
     private String nom;
     private String prenom;
     private String departement;
+    private String personneAContacter;
     private String email;
     private String telephone;
     private String entreprise;

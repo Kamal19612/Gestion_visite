@@ -27,6 +27,8 @@ public class soumissionRequest {
     @NotBlank(message = "Le département est requis")
     private String departement;
 
+    private String personneAContacter;
+
     @NotBlank(message = "L'email est requis")
     @Email(message = "Email invalide")
     private String email;

@@ -3,7 +3,7 @@ package com.NativIA.GestionVisite.Entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import com.NativIA.GestionVisite.Enum.typeStatus;
+import com.NativIA.GestionVisite.Enum.TypeStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,7 +38,7 @@ public class Visite implements Serializable{
     @Column(nullable=false)
     private String motif;
     @Column(nullable=false)
-    private typeStatus statut;
+    private TypeStatus statut;
     @Column(name = "signature_path")
     private String signaturePath;
 

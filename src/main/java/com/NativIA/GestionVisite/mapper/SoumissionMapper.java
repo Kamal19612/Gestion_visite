@@ -18,6 +18,7 @@ public class SoumissionMapper {
                 .nom(req.getNom())
                 .prenom(req.getPrenom())
                 .departement(req.getDepartement())
+                .personneAContacter(req.getPersonneAContacter())
                 .email(req.getEmail())
                 .telephone(req.getTelephone())
                 .entreprise(req.getEntreprise())
@@ -40,6 +41,7 @@ public class SoumissionMapper {
                 .nom(s.getNom())
                 .prenom(s.getPrenom())
                 .departement(s.getDepartement())
+                .personneAContacter(s.getPersonneAContacter())
                 .email(s.getEmail())
                 .telephone(s.getTelephone())
                 .entreprise(s.getEntreprise())
@@ -56,6 +58,7 @@ public class SoumissionMapper {
         if (req.getNom() != null) target.setNom(req.getNom());
         if (req.getPrenom() != null) target.setPrenom(req.getPrenom());
         if (req.getDepartement() != null) target.setDepartement(req.getDepartement());
+        if (req.getPersonneAContacter() != null) target.setPersonneAContacter(req.getPersonneAContacter());
         if (req.getEmail() != null) target.setEmail(req.getEmail());
         if (req.getTelephone() != null) target.setTelephone(req.getTelephone());
         if (req.getEntreprise() != null) target.setEntreprise(req.getEntreprise());

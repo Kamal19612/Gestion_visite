@@ -11,6 +11,7 @@ import com.NativIA.GestionVisite.DAO.visiteRepository;
 import com.NativIA.GestionVisite.DTO.Request.visiteRequest;
 import com.NativIA.GestionVisite.DTO.Response.visiteResponse;
 import com.NativIA.GestionVisite.Entities.Visite;
+import com.NativIA.GestionVisite.Enum.TypeStatus;
 import com.NativIA.GestionVisite.Services.visiteService;
 import com.NativIA.GestionVisite.mapper.VisiteMapper;
 
@@ -43,7 +44,7 @@ public class VisiteServiceImpl implements visiteService {
     @Override
     public List<visiteResponse> findByStatut(String statut) {
         try {
-            return visiteRepository.findByStatut(com.NativIA.GestionVisite.Enum.typeStatus.valueOf(statut)).stream().map(visiteMapper::toResponse).collect(Collectors.toList());
+            return visiteRepository.findByStatut(TypeStatus.valueOf(statut)).stream().map(visiteMapper::toResponse).collect(Collectors.toList());
         } catch (Exception e) {
             return List.of();
         }
@@ -59,7 +60,7 @@ public class VisiteServiceImpl implements visiteService {
         Visite v = visiteRepository.findById(id).orElse(null);
         if (v == null) return null;
         v.setHEntree(java.time.LocalDateTime.now());
-        v.setStatut(com.NativIA.GestionVisite.Enum.typeStatus.EN_COURS);
+        v.setStatut(TypeStatus.EN_COURS);
         Visite saved = visiteRepository.save(v);
         return visiteMapper.toResponse(saved);
     }
@@ -69,7 +70,7 @@ public class VisiteServiceImpl implements visiteService {
         Visite v = visiteRepository.findById(id).orElse(null);
         if (v == null) return null;
         v.setHSortie(java.time.LocalDateTime.now());
-        v.setStatut(com.NativIA.GestionVisite.Enum.typeStatus.TERMINEE);
+        v.setStatut(TypeStatus.TERMINEE);
         Visite saved = visiteRepository.save(v);
         return visiteMapper.toResponse(saved);
     }

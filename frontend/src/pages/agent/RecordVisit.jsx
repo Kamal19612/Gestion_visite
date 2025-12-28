@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import Input from '../../components/Form/Input';
 import Button from '../../components/ui/Button';
+import SignaturePad from '../../components/SignaturePad';
 // import visitService from '../../services/visitService'; // Assuming a new service for visits
 
 export default function RecordVisit() {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-  const navigate = useNavigate();
+  const { register, handleSubmit, formState: { errors }, watch } = useForm();
   const [serverError, setServerError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [visitorData, setVisitorData] = useState(null);
+  const [signatureUploaded, setSignatureUploaded] = useState(false);
+
+  const idNumberValue = watch('idNumber');
 
   const recordVisitMutation = useMutation({
     mutationFn: (data) => new Promise(resolve => setTimeout(() => {
@@ -66,9 +68,14 @@ export default function RecordVisit() {
   const onSubmit = (data) => {
     setServerError('');
     setSuccessMessage('');
-
-    if (!data.idNumber || !data.arrivalTime || !data.departureTime || !data.signatureConfirmed) {
+    const idNumber = data.idNumber
+    if (!idNumber || !data.arrivalTime || !data.departureTime) {
       setServerError('Veuillez remplir tous les champs obligatoires.');
+      return;
+    }
+
+    if (!signatureUploaded) {
+      setServerError('La signature du visiteur doit être capturée et uploadée en présence de l\'agent de sécurité.');
       return;
     }
     
@@ -94,7 +101,7 @@ export default function RecordVisit() {
         <h3 className="text-lg font-medium text-gray-900 mt-6 mb-2">Identification du Visiteur</h3>
         <div className="flex items-end gap-2">
           <Input 
-            label="Numéro d\'Identification" 
+            label="Numéro d'Identification" 
             name="idNumber" 
             register={register({ required: 'Le numéro d\'identification est requis' })}
             error={errors.idNumber?.message}
@@ -115,7 +122,7 @@ export default function RecordVisit() {
         <h3 className="text-lg font-medium text-gray-900 mt-6 mb-2">Détails de la Visite</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input 
-            label="Heure d\'Arrivée" 
+            label="Heure d'Arrivée" 
             name="arrivalTime" 
             type="time" 
             register={register({ required: 'L\'heure d\'arrivée est requise' })}
@@ -132,16 +139,12 @@ export default function RecordVisit() {
         </div>
         
         <div>
-          <label htmlFor="signatureConfirmed" className="block text-sm font-medium text-gray-700 mb-1">
-            <input
-              type="checkbox"
-              id="signatureConfirmed"
-              {...register("signatureConfirmed", { required: 'La confirmation de signature est requise' })}
-              className="mr-2"
-            />
-            Signature du visiteur confirmée
-          </label>
-          {errors.signatureConfirmed && <p className="mt-1 text-sm text-red-600">{errors.signatureConfirmed.message}</p>}
+          <h4 className="font-medium mb-2">Signature (réalisée en présence de l'agent)</h4>
+          <p className="text-sm text-gray-600 mb-2">Demandez au visiteur de signer sur la tablette/terminal, puis cliquez sur Enregistrer la signature.</p>
+          {/* use watched idNumber as visitorId when available */}
+          <SignaturePad visitorId={idNumberValue || ''} onUploaded={() => setSignatureUploaded(true)} />
+          {!signatureUploaded && <p className="mt-1 text-sm text-red-600">Signature non enregistrée</p>}
+          {signatureUploaded && <p className="mt-1 text-sm text-green-600">Signature enregistrée</p>}
         </div>
         
         <div className="flex justify-end mt-6">

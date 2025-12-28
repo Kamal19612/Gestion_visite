@@ -1,1 +1,103 @@
-﻿import React, { useState } from "react"; import { useForm } from "react-hook-form"; import { useMutation } from "@tanstack/react-query"; import { useNavigate } from "react-router-dom"; import Button from "../../components/ui/Button"; import soumissionService from "../../services/soumissionService"; export default function AppointmentRequest() { const { register, handleSubmit, formState: { errors } } = useForm(); const navigate = useNavigate(); const [serverError, setServerError] = useState(""); const [successMessage, setSuccessMessage] = useState(""); const mutation = useMutation({ mutationFn: async (formData) => { const soumissionData = { nom: formData.lastName, prenom: formData.firstName, email: formData.email, telephone: formData.whatsapp, departement: "Général", entreprise: "Non spécifiée", motif: formData.motif, dateRendezVous: formData.appointmentDate, heureRendezVous: formData.appointmentTime || "09:00" }; return soumissionService.createSoumission(soumissionData); }, onSuccess: () => { setSuccessMessage(" Demande soumise !"); setServerError(""); setTimeout(() => navigate("/visitor/dashboard"), 2500); }, onError: (err) => { const msg = err?.response?.data?.error || "Erreur serveur"; setServerError(" " + msg); setSuccessMessage(""); } }); const onSubmit = (data) => { setServerError(""); setSuccessMessage(""); if (!data.firstName || !data.lastName || !data.email || !data.whatsapp || !data.appointmentDate || !data.motif) { setServerError(" Tous les champs requis !"); return; } mutation.mutate(data); }; return (<div className="max-w-xl mx-auto mt-12 p-6 bg-white rounded-md shadow"><h2 className="text-2xl font-semibold mb-4">Demande de RDV</h2><p className="mb-4 text-gray-600">Remplissez le formulaire.</p>{serverError && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">{serverError}</div>}{successMessage && <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">{successMessage}</div>}<form onSubmit={handleSubmit(onSubmit)} className="space-y-4"><div className="grid grid-cols-2 gap-4"><div><label className="block text-sm font-medium">Prénom *</label><input {...register("firstName", { required: "requis" })} className="mt-1 w-full rounded border px-2 py-1" /></div><div><label className="block text-sm font-medium">Nom *</label><input {...register("lastName", { required: "requis" })} className="mt-1 w-full rounded border px-2 py-1" /></div></div><div><label className="block text-sm font-medium">Email *</label><input type="email" {...register("email", { required: "requis", pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "invalide" } })} className="mt-1 w-full rounded border px-2 py-1" />{errors.email && <p className="text-red-600 text-sm">{errors.email.message}</p>}</div><div><label className="block text-sm font-medium">WhatsApp *</label><input {...register("whatsapp", { required: "requis" })} className="mt-1 w-full rounded border px-2 py-1" /></div><div className="grid grid-cols-2 gap-4"><div><label className="block text-sm font-medium">Date *</label><input type="date" {...register("appointmentDate", { required: "requis" })} className="mt-1 w-full rounded border px-2 py-1" /></div><div><label className="block text-sm font-medium">Heure</label><input type="time" {...register("appointmentTime")} className="mt-1 w-full rounded border px-2 py-1" /></div></div><div><label className="block text-sm font-medium">Motif *</label><textarea {...register("motif", { required: "requis" })} rows="3" className="mt-1 w-full rounded border px-2 py-1" /></div><div className="flex justify-between"><button type="button" onClick={() => navigate("/visitor/dashboard")} className="text-indigo-600"> Retour</button><Button type="submit" disabled={mutation.isPending}>{mutation.isPending ? "..." : "Soumettre"}</Button></div></form></div>); }
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast'; // On utilise react-hot-toast pour les notifications
+import appointmentService from '../../services/appointmentService';
+import Input from '../../components/Form/Input'; // On réutilise le composant Input
+import Button from '../../components/ui/Button'; // On réutilise le composant Button
+
+export default function AppointmentRequest() {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const navigate = useNavigate();
+
+  // Configuration de la mutation pour appeler le service de création de rendez-vous
+  const mutation = useMutation({
+    mutationFn: (data) => appointmentService.createAppointment(data),
+    onSuccess: () => {
+      // Afficher une notification de succès
+      toast.success('Votre demande de rendez-vous a été envoyée avec succès !');
+      
+      // Rediriger l'utilisateur après un court délai
+      setTimeout(() => navigate('/visitor'), 2000);
+    },
+    onError: (err) => {
+      // Afficher une notification d'erreur
+      const errorMsg = err?.response?.data?.message || 'Une erreur est survenue lors de la création du rendez-vous.';
+      toast.error(errorMsg);
+    }
+  });
+
+  // Fonction appelée lors de la soumission du formulaire
+  const onSubmit = (data) => {
+    mutation.mutate(data);
+  };
+
+  return (
+    <div className="max-w-xl mx-auto mt-12 p-6 bg-white rounded-md shadow-lg">
+      <h2 className="text-3xl font-bold text-gray-800 mb-4">Demander un rendez-vous</h2>
+      <p className="mb-6 text-gray-600">
+        Veuillez remplir les informations ci-dessous pour planifier votre visite.
+      </p>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Champ pour la date du rendez-vous */}
+        <Input
+          label="Date du rendez-vous"
+          name="date"
+          type="date"
+          register={register}
+          validation={{ required: 'La date est obligatoire' }}
+          error={errors.date}
+        />
+
+        {/* Champ pour l'heure du rendez-vous */}
+        <Input
+          label="Heure du rendez-vous"
+          name="heure"
+          type="time"
+          register={register}
+          validation={{ required: "L'heure est obligatoire" }}
+          error={errors.heure}
+        />
+
+        {/* Nouveau champ pour le motif */}
+        <Input
+          label="Motif du rendez-vous"
+          name="motif"
+          type="text"
+          register={register}
+          validation={{ required: 'Le motif est obligatoire' }}
+          error={errors.motif}
+        />
+
+        {/* Nouveau champ pour la personne à rencontrer */}
+        <Input
+          label="Personne à rencontrer"
+          name="personneARencontrer"
+          type="text"
+          register={register}
+          validation={{ required: 'La personne à rencontrer est obligatoire' }}
+          error={errors.personneARencontrer}
+        />
+
+        {/* Nouveau champ pour le département */}
+        <Input
+          label="Département"
+          name="departement"
+          type="text"
+          register={register}
+          validation={{ required: 'Le département est obligatoire' }}
+          error={errors.departement}
+        />
+
+        {/* Bouton de soumission */}
+        <div className="flex justify-end pt-4">
+          <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending ? 'Envoi en cours...' : 'Envoyer la demande'}
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+}

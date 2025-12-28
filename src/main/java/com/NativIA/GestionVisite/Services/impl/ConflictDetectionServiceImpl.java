@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.NativIA.GestionVisite.DAO.rendezVousRepository;
 import com.NativIA.GestionVisite.Entities.RendezVous;
 import com.NativIA.GestionVisite.Services.ConflictDetectionService;
-import com.NativIA.GestionVisite.Enum.typeStatus;
+import com.NativIA.GestionVisite.Enum.TypeStatus;
 
 @Service
 public class ConflictDetectionServiceImpl implements ConflictDetectionService {
@@ -29,8 +29,8 @@ public class ConflictDetectionServiceImpl implements ConflictDetectionService {
         // Filter out cancelled or rejected appointments
         // If there is ANY appointment that is NOT Cancelled/Rejected, it's a conflict.
         return existing.stream().anyMatch(rdv -> 
-            rdv.getStatut() != typeStatus.ANNULEE && 
-            rdv.getStatut() != typeStatus.REJETEE
+            rdv.getStatut() != TypeStatus.ANNULEE && 
+            rdv.getStatut() != TypeStatus.REJETEE
         );
     }
 }

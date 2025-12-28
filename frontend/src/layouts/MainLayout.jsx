@@ -1,29 +1,44 @@
 import React, { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import Sidebar from '../components/layout/Sidebar';
+import AppHeader from '../components/layout/AppHeader';
 
 export default function MainLayout({ children }) {
-  const [isMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
+  // Si l'utilisateur n'est pas connecté, afficher un layout simple
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <AppHeader />
+        <main className="flex-1">
+          {children || <Outlet />}
+        </main>
+        <footer className="bg-white border-t py-3 text-center text-sm text-slate-500">
+          © 2025 NativIA — VisitePulse
+        </footer>
+      </div>
+    );
+  }
+
+  // Layout avec sidebar pour les utilisateurs connectés
   return (
-    <div className="min-h-screen flex flex-col">
-      <header>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        </div>
-        {isMobileMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <Link to="/" className="text-gray-600 hover:text-indigo-600 block px-3 py-2 rounded-md text-base font-medium">Accueil</Link>
-              <Link to="/auth/login" className="bg-indigo-600 text-white hover:bg-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Connexion</Link>
-            </div>
-          </div>
-        )}
-      </header>
-      <main className="flex-1 max-w-7xl mx-auto p-4 w-full">
-        {children || <Outlet />}
-      </main>
-      <footer className="bg-white border-t py-3 text-center text-sm text-slate-500">
-        © 2025 NativIA — VisitePulse
-      </footer>
+    <div className="min-h-screen flex bg-gray-50">
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      <div 
+        className="flex-1 flex flex-col overflow-hidden transition-all duration-300"
+        style={{ marginLeft: sidebarOpen ? '256px' : '80px' }}
+      >
+        <AppHeader />
+        <main className="flex-1 overflow-y-auto p-6">
+          {children || <Outlet />}
+        </main>
+        <footer className="bg-white border-t py-3 text-center text-sm text-slate-500">
+          © 2025 NativIA — VisitePulse
+        </footer>
+      </div>
     </div>
   );
 }

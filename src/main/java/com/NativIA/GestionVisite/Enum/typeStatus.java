@@ -1,6 +1,6 @@
 package com.NativIA.GestionVisite.Enum;
 
-public enum typeStatus {
+public enum TypeStatus {
     EN_ATTENTE,   // Pending approval
     APPROUVEE,    // Approved by secretary
     REJETEE,      // Rejected by secretary

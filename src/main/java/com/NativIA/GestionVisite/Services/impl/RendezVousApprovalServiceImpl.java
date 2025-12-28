@@ -14,7 +14,7 @@ import com.NativIA.GestionVisite.DTO.Request.ApprovalRequestDTO;
 import com.NativIA.GestionVisite.DTO.Response.ApprovalResponseDTO;
 import com.NativIA.GestionVisite.Entities.RendezVous;
 import com.NativIA.GestionVisite.Entities.SoumissionRDV;
-import com.NativIA.GestionVisite.Enum.typeStatus;
+import com.NativIA.GestionVisite.Enum.TypeStatus;
 import com.NativIA.GestionVisite.Services.EmailService;
 import com.NativIA.GestionVisite.Services.RendezVousApprovalService;
 
@@ -41,7 +41,7 @@ public class RendezVousApprovalServiceImpl implements RendezVousApprovalService 
         java.util.Optional<RendezVous> maybeRdv = rendezVousRepository.findById(idRendezVous);
         if (maybeRdv.isPresent()) {
             RendezVous rdv = maybeRdv.get();
-            rdv.setStatut(typeStatus.APPROUVEE);
+            rdv.setStatut(TypeStatus.APPROUVEE);
             RendezVous updated = rendezVousRepository.save(rdv);
 
             String email = null;
@@ -119,7 +119,7 @@ public class RendezVousApprovalServiceImpl implements RendezVousApprovalService 
         java.util.Optional<RendezVous> maybeRdv = rendezVousRepository.findById(idRendezVous);
         if (maybeRdv.isPresent()) {
             RendezVous rdv = maybeRdv.get();
-            rdv.setStatut(typeStatus.REJETEE);
+            rdv.setStatut(TypeStatus.REJETEE);
             RendezVous updated = rendezVousRepository.save(rdv);
 
             String email = null;
