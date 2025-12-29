@@ -77,6 +77,6 @@ public class RendezVous implements java.io.Serializable {
 
     @ManyToOne
     @jakarta.persistence.JoinColumn(name = "visiteur_id")
-    private Visiteur visiteur;
+    private com.NativIA.GestionVisite.Entities.User visiteur;
 
 }

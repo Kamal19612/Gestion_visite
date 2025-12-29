@@ -37,22 +37,13 @@ public class RendezVousController {
         try {
             rendezVousResponse res = service.create(req);
             if (res != null && res.getId() != null) {
-                java.net.URI location = java.net.URI.create("/api/v1/rendezvous/" + res.getId());
-                return ResponseEntity.created(location).body(res);
+                return ResponseEntity.created(java.net.URI.create("/api/v1/rendezvous/" + res.getId())).body(res);
             }
             return ResponseEntity.status(HttpStatus.CREATED).body(res);
         } catch (IllegalStateException e) {
-            // Retourner le message d'erreur pour aider le frontend
-            java.util.Map<String, String> error = new java.util.HashMap<>();
-            error.put("error", e.getMessage());
-            error.put("message", e.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(java.util.Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            // Retourner le message d'erreur pour aider au débogage
-            java.util.Map<String, String> error = new java.util.HashMap<>();
-            error.put("error", e.getMessage() != null ? e.getMessage() : "Une erreur est survenue lors de la création du rendez-vous");
-            error.put("message", e.getMessage() != null ? e.getMessage() : "Une erreur est survenue lors de la création du rendez-vous");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(java.util.Map.of("error", e.getMessage()));
         }
     }
 

@@ -1,6 +1,8 @@
 package com.NativIA.GestionVisite.DAO;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.NativIA.GestionVisite.Entities.RendezVous;
@@ -14,6 +16,7 @@ public interface rendezVousRepository extends JpaRepository<RendezVous, Long> {
 
 	java.util.List<RendezVous> findBySecretaire_Id(Long secretaireId);
 
-	java.util.List<RendezVous> findByVisiteur_Email(String email);
+	@Query("SELECT rv FROM RendezVous rv WHERE rv.visiteur.email = :email")
+	java.util.List<RendezVous> findByVisiteurEmail(@Param("email") String email);
 
 }

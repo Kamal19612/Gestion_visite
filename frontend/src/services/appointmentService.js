@@ -6,17 +6,15 @@ const appointmentService = {
     return response.data;
   },
 
-  // Add other appointment-related API calls here (e.g., getAppointments, updateAppointment, etc.)
+  // Get appointments for authenticated visitor
   getAppointments: async () => {
-    const response = await api.get('/v1/rendezvous');
+    const response = await api.get('/v1/rendezvous/mine');
     return response.data;
   },
 
-  /**
-   * Récupère les rendez-vous de l'utilisateur connecté
-   */
-  getMyAppointments: async () => {
-    const response = await api.get('/v1/rendezvous/mine');
+  // Get all appointments (admin use)
+  getAllAppointments: async () => {
+    const response = await api.get('/v1/rendezvous');
     return response.data;
   },
 

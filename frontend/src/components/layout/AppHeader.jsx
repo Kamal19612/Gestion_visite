@@ -1,62 +1,38 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
 import logo from '../../assets/logo.jpeg';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function AppHeader() {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const getRoleLabel = (role) => {
-    const labels = {
-      ADMIN: 'Administrateur',
-      VISITEUR: 'Visiteur',
-      SECRETAIRE: 'Secrétaire',
-      AGENT_SECURITE: 'Agent de Sécurité',
-      EMPLOYE: 'Employé',
-    };
-    return labels[role] || role;
-  };
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200">
-      <div className="px-6 py-4 flex items-center justify-between">
-        {!user ? (
-          <>
-            <Link to="/" className="flex items-center space-x-2">
-              <img src={logo} alt="VisitePulse Logo" className="w-10 h-10 rounded-full" />
-              <h1 className="text-2xl font-bold text-gray-900">VisitePulse</h1>
+    <header className="bg-white border-b">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14">
+          <div className="flex items-center gap-3">
+            <Link to="/" className="flex items-center gap-3">
+              <img src={logo} alt="VisitePulse" className="w-9 h-9 rounded-md object-cover" />
+              <span className="hidden sm:inline-block text-lg font-semibold text-gray-800">VisitePulse</span>
             </Link>
-            <div className="flex items-center space-x-4">
-              <Link to="/auth/login" className="text-gray-600 hover:text-indigo-600 font-medium">
-                Connexion
-              </Link>
-              <Link to="/auth/register" className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
-                S'inscrire
-              </Link>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="flex items-center space-x-4">
-              <div className="text-sm">
-                <p className="font-semibold text-gray-900">{user.name || user.email}</p>
-                <p className="text-gray-500">{getRoleLabel(user.role)}</p>
+          </div>
+
+          <div className="flex-1" />
+
+          <div className="flex items-center gap-4">
+            {user ? (
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-700">{user.firstName || user.email}</span>
+                <button onClick={logout} className="text-sm text-red-600 hover:underline">Se déconnecter</button>
               </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => {
-                  logout();
-                  navigate('/auth/login');
-                }}
-                className="text-gray-600 hover:text-red-600 font-medium transition-colors"
-              >
-                Déconnexion
-              </button>
-            </div>
-          </>
-        )}
+            ) : (
+              <>
+                <Link to="/auth/login" className="text-sm text-gray-600 hover:text-indigo-600">Connexion</Link>
+                <Link to="/auth/register" className="hidden sm:inline-block bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-3 py-1.5 rounded-md">S'inscrire</Link>
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </header>
   );

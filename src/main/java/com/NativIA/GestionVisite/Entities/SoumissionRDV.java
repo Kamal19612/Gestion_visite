@@ -34,7 +34,7 @@ public class SoumissionRDV implements java.io.Serializable {
     private String prenom;
     @Column
     private String departement;
-    @Column
+    @Column(name = "personne_a_contacter")
     private String personneAContacter;
     @Column(nullable=false)
     private String email;

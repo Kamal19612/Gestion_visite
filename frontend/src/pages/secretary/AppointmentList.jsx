@@ -11,78 +11,23 @@ export default function AppointmentList() {
     queryFn: appointmentService.getAppointments,
   });
 
-  const approveMutation = useMutation({
-    mutationFn: ({ id, approvalData }) => appointmentService.approveAppointment(id, approvalData),
+  const updateAppointmentStatusMutation = useMutation({
+    mutationFn: ({ id, status }) => appointmentService.updateAppointment(id, { status }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
     },
     onError: (mutationError) => {
-      console.error('Error approving appointment:', mutationError);
-    },
-  });
-
-  const rejectMutation = useMutation({
-    mutationFn: ({ id, rejectionData }) => appointmentService.rejectAppointment(id, rejectionData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] });
-    },
-    onError: (mutationError) => {
-      console.error('Error rejecting appointment:', mutationError);
+      console.error('Error updating appointment status:', mutationError);
+      // Optionally, set a server error state to display to the user
     },
   });
 
   const handleApprove = (id) => {
-    approveMutation.mutate({ 
-      id, 
-      approvalData: { 
-        reason: 'Approuvé depuis la liste', 
-        comments: '' 
-      } 
-    });
+    updateAppointmentStatusMutation.mutate({ id, status: 'Approved' });
   };
 
   const handleReject = (id) => {
-    rejectMutation.mutate({ 
-      id, 
-      rejectionData: { 
-        reason: 'Rejeté depuis la liste', 
-        comments: '' 
-      } 
-    });
-  };
-
-  // Helper function to normalize status display
-  const getStatusDisplay = (status) => {
-    const statusMap = {
-      'EN_ATTENTE': 'En attente',
-      'APPROUVEE': 'Approuvée',
-      'REJETEE': 'Rejetée',
-      'PLANIFIEE': 'Planifiée',
-      'EN_COURS': 'En cours',
-      'TERMINEE': 'Terminée',
-      'ANNULEE': 'Annulée',
-      'Pending': 'En attente',
-      'Approved': 'Approuvée',
-      'Rejected': 'Rejetée'
-    };
-    return statusMap[status] || status;
-  };
-
-  const getStatusClass = (status) => {
-    if (status === 'APPROUVEE' || status === 'Approved' || status === 'PLANIFIEE') {
-      return 'bg-green-100 text-green-800';
-    }
-    if (status === 'EN_ATTENTE' || status === 'Pending') {
-      return 'bg-yellow-100 text-yellow-800';
-    }
-    if (status === 'REJETEE' || status === 'Rejected') {
-      return 'bg-red-100 text-red-800';
-    }
-    return 'bg-gray-100 text-gray-800';
-  };
-
-  const isStatusPending = (status) => {
-    return status === 'EN_ATTENTE' || status === 'Pending';
+    updateAppointmentStatusMutation.mutate({ id, status: 'Rejected' });
   };
 
   if (isLoading) {
@@ -143,25 +88,29 @@ export default function AppointmentList() {
                     {appointment.motif}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(appointment.status)}`}>
-                      {getStatusDisplay(appointment.status)}
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      appointment.status === 'Approved' ? 'bg-green-100 text-green-800' :
+                      appointment.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {appointment.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <Link to={`/secretary/appointments/${appointment.id}`} className="text-indigo-600 hover:text-indigo-900 mr-4">Détails</Link>
-                    {isStatusPending(appointment.status) && (
+                    {appointment.status === 'Pending' && (
                       <>
                         <button 
                           onClick={() => handleApprove(appointment.id)} 
                           className="text-green-600 hover:text-green-900 mr-4"
-                          disabled={approveMutation.isPending}
+                          disabled={updateAppointmentStatusMutation.isPending}
                         >
                           Approuver
                         </button>
                         <button 
                           onClick={() => handleReject(appointment.id)} 
                           className="text-red-600 hover:text-red-900"
-                          disabled={rejectMutation.isPending}
+                          disabled={updateAppointmentStatusMutation.isPending}
                         >
                           Rejeter
                         </button>

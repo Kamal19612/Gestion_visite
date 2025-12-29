@@ -16,8 +16,11 @@ import com.NativIA.GestionVisite.Entities.RendezVous;
 import com.NativIA.GestionVisite.Services.rendezVousService;
 import com.NativIA.GestionVisite.mapper.RendezVousMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @Transactional
+@Slf4j
 public class RendezVousServiceImpl implements rendezVousService {
 
     @Autowired
@@ -28,73 +31,23 @@ public class RendezVousServiceImpl implements rendezVousService {
 
     @Autowired
     private com.NativIA.GestionVisite.Services.ConflictDetectionService conflictDetectionService;
-
-
     
     @Autowired
-    private com.NativIA.GestionVisite.DAO.visiteurRepository visiteurRepository; // Inject VisiteurRepository
+    private com.NativIA.GestionVisite.DAO.userRepository userRepository;
 
-    @Autowired
-    private com.NativIA.GestionVisite.DAO.userRepository userRepository; // Inject UserRepository
-
-    @Autowired
-    private com.NativIA.GestionVisite.mapper.VisiteurMapper visiteurMapper;
-
+    
     @Override
     public rendezVousResponse create(rendezVousRequest request) {
-        // Get authenticated user's email and role
+        // Get authenticated user's email
         org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated()) {
             throw new IllegalStateException("User not authenticated");
         }
         String userEmail = auth.getName(); // email is the principal name
-        
-        // Get user role from authentication authorities
-        String userRole = auth.getAuthorities().stream()
-                .map(a -> a.getAuthority().replace("ROLE_", ""))
-                .findFirst()
-                .orElse("VISITEUR");
 
-        com.NativIA.GestionVisite.Entities.Visiteur visiteur;
-
-        // Cas d'utilisation 5 : Agent crée un rendez-vous pour un visiteur
-        if ("AGENT_SECURITE".equals(userRole) && request.getVisiteurEmail() != null && !request.getVisiteurEmail().trim().isEmpty()) {
-            // Agent spécifie un visiteur par email
-            String visiteurEmail = request.getVisiteurEmail().trim();
-            visiteur = visiteurRepository.findByEmail(visiteurEmail).orElse(null);
-            
-            // Si le visiteur n'existe pas, le créer avec les informations fournies
-            if (visiteur == null) {
-                if (request.getVisiteurFirstName() == null || request.getVisiteurLastName() == null) {
-                    throw new IllegalStateException("Pour créer un nouveau visiteur, le prénom et le nom sont requis");
-                }
-                
-                // Créer un nouveau visiteur
-                // Vérifier d'abord si un User avec cet email existe déjà
-                java.util.Optional<com.NativIA.GestionVisite.Entities.User> existingUser = userRepository.findByEmail(visiteurEmail);
-                if (existingUser.isPresent() && existingUser.get() instanceof com.NativIA.GestionVisite.Entities.Visiteur) {
-                    visiteur = (com.NativIA.GestionVisite.Entities.Visiteur) existingUser.get();
-                } else {
-                    visiteur = com.NativIA.GestionVisite.Entities.Visiteur.builder()
-                            .name((request.getVisiteurFirstName().trim() + " " + request.getVisiteurLastName().trim()).trim())
-                            .email(visiteurEmail)
-                            .role(com.NativIA.GestionVisite.Enum.Roles.VISITEUR)
-                            .emailVerified(true) // Visiteur créé par agent est considéré comme vérifié
-                            .entreprise(request.getVisiteurFirstName() + " " + request.getVisiteurLastName()) // Entreprise par défaut
-                            .scanDocumentPath("")
-                            .signaturePath("")
-                            .phoneNumber(request.getVisiteurWhatsapp()) // Ajouter le WhatsApp si fourni
-                            .build();
-                    
-                    visiteur = visiteurRepository.save(visiteur);
-                }
-            }
-        } else {
-            // Cas d'utilisation 2 : Visiteur crée son propre rendez-vous
-            // Find the associated visiteur directly by email
-            visiteur = visiteurRepository.findByEmail(userEmail)
-                    .orElseThrow(() -> new IllegalStateException("Visiteur not found for authenticated user. Si vous êtes un agent, veuillez spécifier l'email du visiteur."));
-        }
+        // Find the associated user (must exist) and link it as visiteur
+        com.NativIA.GestionVisite.Entities.User visiteur = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalStateException("Visiteur not found for authenticated user"));
 
         // check for conflicts before creating
         LocalDate date = LocalDate.parse(request.getDate());
@@ -103,7 +56,7 @@ public class RendezVousServiceImpl implements rendezVousService {
             throw new IllegalStateException("Conflit de rendez-vous: créneau déjà réservé");
         }
         RendezVous r = rendezVousMapper.toEntity(request);
-        r.setVisiteur(visiteur); // Set the found or created visiteur
+        r.setVisiteur(visiteur); // Set the found visiteur (User)
         return rendezVousMapper.toResponse(rendezVousRepository.save(r));
     }
 
@@ -130,8 +83,12 @@ public class RendezVousServiceImpl implements rendezVousService {
     @Override
     public List<rendezVousResponse> findByVisiteurEmail(String email) {
         try {
-            return rendezVousRepository.findByVisiteur_Email(email).stream().map(rendezVousMapper::toResponse).collect(Collectors.toList());
+            log.info("Recherche des RDV pour email: {}", email);
+            List<RendezVous> rdvList = rendezVousRepository.findByVisiteurEmail(email);
+            log.info("Trouvé {} RDV pour email: {}", rdvList.size(), email);
+            return rdvList.stream().map(rendezVousMapper::toResponse).collect(Collectors.toList());
         } catch (Exception e) {
+            log.error("Erreur lors de la recherche des RDV par email {}: {}", email, e.getMessage(), e);
             return List.of();
         }
     }

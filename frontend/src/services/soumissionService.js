@@ -35,13 +35,14 @@ const soumissionService = {
   },
 
   /**
-   * ⚠️ ATTENTION: Cette méthode n'est pas implémentée dans le backend
-   * Le contrôleur SoumissionController n'a pas de méthode PUT/PATCH
-   * Si vous avez besoin de cette fonctionnalité, elle doit être implémentée côté backend
+   * Mettre à jour une soumission
+   * @param {number} id - ID de la soumission
+   * @param {Object} updatedData - Données à mettre à jour
+   * @returns {Promise} Données mises à jour
    */
   updateSoumission: async (id, updatedData) => {
-    console.warn('updateSoumission: Cette méthode n\'est pas implémentée dans le backend.');
-    throw new Error('La mise à jour des soumissions n\'est pas encore implémentée.');
+    const response = await api.put(`/v1/soumissions/${id}`, updatedData);
+    return response.data;
   },
 
   /**
@@ -55,19 +56,25 @@ const soumissionService = {
   },
 
   /**
-   * ⚠️ ATTENTION: Ces méthodes ne sont pas implémentées dans le backend
-   * Le contrôleur SoumissionController n'a pas de méthodes approve/reject
-   * Ces endpoints existent uniquement pour les rendez-vous (RendezVousController)
-   * Si vous avez besoin de cette fonctionnalité pour les soumissions, elle doit être implémentée côté backend
+   * Approuver une soumission
+   * @param {number} id - ID de la soumission
+   * @param {Object} approvalData - Données d'approbation
+   * @returns {Promise} Réponse du serveur
    */
   approveSoumission: async (id, approvalData) => {
-    console.warn('approveSoumission: Cette méthode n\'est pas implémentée dans le backend.');
-    throw new Error('L\'approbation des soumissions n\'est pas encore implémentée.');
+    const response = await api.post(`/v1/soumissions/${id}/approve`, approvalData);
+    return response.data;
   },
 
+  /**
+   * Rejeter une soumission
+   * @param {number} id - ID de la soumission
+   * @param {Object} rejectionData - Raison du rejet
+   * @returns {Promise} Réponse du serveur
+   */
   rejectSoumission: async (id, rejectionData) => {
-    console.warn('rejectSoumission: Cette méthode n\'est pas implémentée dans le backend.');
-    throw new Error('Le rejet des soumissions n\'est pas encore implémenté.');
+    const response = await api.post(`/v1/soumissions/${id}/reject`, rejectionData);
+    return response.data;
   }
 };
 

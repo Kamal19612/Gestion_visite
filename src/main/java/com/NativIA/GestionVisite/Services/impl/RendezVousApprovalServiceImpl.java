@@ -14,6 +14,7 @@ import com.NativIA.GestionVisite.DTO.Request.ApprovalRequestDTO;
 import com.NativIA.GestionVisite.DTO.Response.ApprovalResponseDTO;
 import com.NativIA.GestionVisite.Entities.RendezVous;
 import com.NativIA.GestionVisite.Entities.SoumissionRDV;
+import com.NativIA.GestionVisite.Entities.User;
 import com.NativIA.GestionVisite.Enum.TypeStatus;
 import com.NativIA.GestionVisite.Services.EmailService;
 import com.NativIA.GestionVisite.Services.RendezVousApprovalService;
@@ -46,7 +47,7 @@ public class RendezVousApprovalServiceImpl implements RendezVousApprovalService 
 
             String email = null;
             String name = "Visiteur";
-            com.NativIA.GestionVisite.Entities.Visiteur visitor = rdv.getVisiteur();
+            User visitor = rdv.getVisiteur();
             if (visitor != null) {
                 email = visitor.getEmail();
                 name = visitor.getName();

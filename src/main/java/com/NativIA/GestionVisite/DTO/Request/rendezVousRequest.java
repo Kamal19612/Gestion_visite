@@ -33,11 +33,4 @@ public class rendezVousRequest {
     private String statut;
     private String code;
 
-    // Champs optionnels pour permettre à un agent de créer un rendez-vous pour un visiteur
-    // Si ces champs sont fournis, le système créera/trouvera le visiteur correspondant
-    private String visiteurEmail; // Email du visiteur (pour agent créant un RDV pour un visiteur)
-    private String visiteurFirstName; // Prénom du visiteur (si création nécessaire)
-    private String visiteurLastName; // Nom du visiteur (si création nécessaire)
-    private String visiteurWhatsapp; // WhatsApp du visiteur (optionnel)
-
 }
