@@ -23,9 +23,11 @@ import java.util.List;
 public class StatistiqueController {
 
     private final statistiqueService service;
+    private final com.NativIA.GestionVisite.Services.visiteService visiteService;
 
-    public StatistiqueController(statistiqueService service) {
+    public StatistiqueController(statistiqueService service, com.NativIA.GestionVisite.Services.visiteService visiteService) {
         this.service = service;
+        this.visiteService = visiteService;
     }
 
     @PostMapping
@@ -74,5 +76,12 @@ public class StatistiqueController {
     @ApiResponse(responseCode = "200", description = "Statistiques par employé récupérées")
     public ResponseEntity<List<StatsByEmployeResponse>> getStatsByEmploye() {
         return ResponseEntity.ok(service.getStatsByEmploye());
+    }
+
+    @GetMapping("/detailed-reports")
+    @Operation(summary = "Rapports détaillés", description = "Récupère les visites détaillées pour génération de rapports")
+    @ApiResponse(responseCode = "200", description = "Rapports détaillés récupérés")
+    public ResponseEntity<java.util.List<com.NativIA.GestionVisite.DTO.Response.visiteResponse>> getDetailedReports() {
+        return ResponseEntity.ok(visiteService.getAll());
     }
 }

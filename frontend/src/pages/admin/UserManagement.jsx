@@ -1,34 +1,44 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import userService from '../../services/userService';
+import toast from 'react-hot-toast';
 
 export default function UserManagement() {
-  // Placeholder for user data (replace with API call)
-  const users = [
-    { id: 1, name: 'Admin User', email: 'admin@example.com', role: 'ADMIN' },
-    { id: 2, name: 'Secretary User', email: 'secretary@example.com', role: 'SECRETAIRE' },
-    { id: 3, name: 'Agent User', email: 'agent@example.com', role: 'AGENT_SECURITE' },
-    { id: 4, name: 'Visitor User', email: 'visitor@example.com', role: 'VISITOR' },
-  ];
+  const qc = useQueryClient();
 
-  const handleEdit = (userId) => {
-    console.log('Edit user:', userId);
-    // Navigate to user edit page or open a modal
-  };
+  const { data: users = [], isLoading, isError } = useQuery({ queryKey: ['users'], queryFn: () => userService.getUsers() });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => userService.deleteUser(id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['users'] });
+      toast.success('Utilisateur supprimé');
+    },
+    onError: (err) => {
+      toast.error('Échec de la suppression');
+      console.error(err);
+    },
+  });
 
   const handleDelete = (userId) => {
-    console.log('Delete user:', userId);
-    // Implement actual delete logic with confirmation
+    if (!confirm('Confirmer la suppression de cet utilisateur ?')) return;
+    deleteMutation.mutate(userId);
   };
 
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Gestion des Utilisateurs</h1>
-      
+
       <div className="flex justify-end mb-4">
         <Link to="/admin/users/new" className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Créer un nouvel utilisateur</Link>
       </div>
 
-      {users.length === 0 ? (
+      {isLoading ? (
+        <p>Chargement...</p>
+      ) : isError ? (
+        <p className="text-red-600">Erreur lors du chargement des utilisateurs.</p>
+      ) : users.length === 0 ? (
         <p className="text-gray-600">Aucun utilisateur enregistré.</p>
       ) : (
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
@@ -62,18 +72,8 @@ export default function UserManagement() {
                     {user.role}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button 
-                      onClick={() => handleEdit(user.id)} 
-                      className="text-indigo-600 hover:text-indigo-900 mr-4"
-                    >
-                      Modifier
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(user.id)} 
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Supprimer
-                    </button>
+                    <Link to={`/admin/users/${user.id}/edit`} className="text-indigo-600 hover:text-indigo-900 mr-4">Modifier</Link>
+                    <button onClick={() => handleDelete(user.id)} className="text-red-600 hover:text-red-900">Supprimer</button>
                   </td>
                 </tr>
               ))}

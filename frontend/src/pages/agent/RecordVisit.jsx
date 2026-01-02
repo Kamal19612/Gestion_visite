@@ -65,6 +65,11 @@ export default function RecordVisit() {
     }
   };
 
+  const getCurrentTime = () => {
+    const now = new Date();
+    return now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false });
+  };
+
   const onSubmit = (data) => {
     setServerError('');
     setSuccessMessage('');
@@ -103,7 +108,8 @@ export default function RecordVisit() {
           <Input 
             label="Numéro d'Identification" 
             name="idNumber" 
-            register={register({ required: 'Le numéro d\'identification est requis' })}
+            register={register}
+            options={{ required: 'Le numéro d\'identification est requis' }}
             error={errors.idNumber?.message}
             className="flex-grow"
           />
@@ -121,21 +127,32 @@ export default function RecordVisit() {
 
         <h3 className="text-lg font-medium text-gray-900 mt-6 mb-2">Détails de la Visite</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input 
-            label="Heure d'Arrivée" 
-            name="arrivalTime" 
-            type="time" 
-            register={register({ required: 'L\'heure d\'arrivée est requise' })}
-            error={errors.arrivalTime?.message}
-            defaultValue={new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false })}
-          />
-          <Input 
-            label="Heure de Départ" 
-            name="departureTime" 
-            type="time" 
-            register={register({ required: 'L\'heure de départ est requise' })}
-            error={errors.departureTime?.message}
-          />
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-medium text-gray-700">Heure d'Arrivée *</label>
+              <button type="button" onClick={() => { const now = getCurrentTime(); document.querySelector('input[name="arrivalTime"]').value = now; }} className="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">Maintenant</button>
+            </div>
+            <Input 
+              name="arrivalTime" 
+              type="time" 
+              register={register}
+              options={{ required: 'L\'heure d\'arrivée est requise' }}
+              error={errors.arrivalTime?.message}
+            />
+          </div>
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-medium text-gray-700">Heure de Départ *</label>
+              <button type="button" onClick={() => { const now = getCurrentTime(); document.querySelector('input[name="departureTime"]').value = now; }} className="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">Maintenant</button>
+            </div>
+            <Input 
+              name="departureTime" 
+              type="time" 
+              register={register}
+              options={{ required: 'L\'heure de départ est requise' }}
+              error={errors.departureTime?.message}
+            />
+          </div>
         </div>
         
         <div>

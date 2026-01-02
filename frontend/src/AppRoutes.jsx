@@ -15,11 +15,18 @@ import AppointmentDetails from './pages/secretary/AppointmentDetails';
 import AgentDashboard from './pages/agent/AgentDashboard';
 import OnsiteAppointment from './pages/agent/OnsiteAppointment';
 import RecordVisit from './pages/agent/RecordVisit';
+import AppointmentValidation from './pages/agent/AppointmentValidation';
+import CurrentVisitors from './pages/agent/CurrentVisitors';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import StatisticsView from './pages/admin/StatisticsView';
+import History from './pages/admin/statistics/History';
+import AverageDuration from './pages/admin/statistics/AverageDuration';
+import Departments from './pages/admin/statistics/Departments';
+import DetailedReports from './pages/admin/statistics/DetailedReports';
 import EmployeeDashboard from './pages/employe/EmployeeDashboard';
 import UserManagement from './pages/admin/UserManagement';
-import SystemSettings from './pages/admin/SystemSettings'; // Import SystemSettings
+import UserForm from './pages/admin/UserForm';
+import SystemSettings from './pages/admin/SystemSettings';
 
 const queryClient = new QueryClient();
 
@@ -33,8 +40,18 @@ function ProtectedRoute({ allowedRoles }) {
   }
 
   // Authenticated, now check roles if required
-  // Assuming user.role is a string like 'VISITOR', 'ADMIN', etc.
-  if (allowedRoles && user.role && !allowedRoles.includes(user.role)) {
+  // Normalize role: backend may return enum object or string. Support both.
+  const resolvedRole = (() => {
+    if (!user) return null;
+    const r = user.role;
+    if (!r) return null;
+    if (typeof r === 'string') return r;
+    if (typeof r === 'object' && r.name) return r.name;
+    // Fallback to toString()
+    try { return String(r); } catch { return null; }
+  })();
+
+  if (allowedRoles && resolvedRole && !allowedRoles.includes(resolvedRole)) {
     // User is authenticated but unauthorized role, redirect to unauthorized page
     return <Navigate to="/unauthorized" replace />;
   }
@@ -86,7 +103,9 @@ export default function AppRoutes() {
             <Route element={<ProtectedRoute allowedRoles={['AGENT_SECURITE']} />}>
               <Route path="/agent/dashboard" element={<AgentDashboard />} />
               <Route path="/agent/appointments/new-on-site" element={<OnsiteAppointment />} />
+              <Route path="/agent/appointments/validate" element={<AppointmentValidation />} />
               <Route path="/agent/visit/record" element={<RecordVisit />} />
+              <Route path="/agent/current-visitors" element={<CurrentVisitors />} />
             </Route>
 
             {/* Protected Routes for Employee */}
@@ -98,7 +117,13 @@ export default function AppRoutes() {
             <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/statistics" element={<StatisticsView />} />
+              <Route path="/admin/statistics/history" element={<History />} />
+              <Route path="/admin/statistics/average-duration" element={<AverageDuration />} />
+              <Route path="/admin/statistics/departments" element={<Departments />} />
+              <Route path="/admin/statistics/detailed-reports" element={<DetailedReports />} />
               <Route path="/admin/users" element={<UserManagement />} />
+              <Route path="/admin/users/new" element={<UserForm />} />
+              <Route path="/admin/users/:id/edit" element={<UserForm />} />
               <Route path="/admin/settings" element={<SystemSettings />} /> {/* New route */}
             </Route>
 

@@ -43,12 +43,19 @@ export default function Login() {
     mutationFn: (data) => authService.login(data),
     onSuccess: async (res) => {
       localStorage.setItem('token', res.data.token)
-      if (res.data.user) {
-        localStorage.setItem('user', JSON.stringify(res.data.user))
+      const userObj = res.data.user || res.data
+      if (userObj) {
+        localStorage.setItem('user', JSON.stringify(userObj))
       }
-      await login(res.data.user || {})
+      await login(userObj || {})
       setAttemptCount(0)
-      navigate('/visitor')
+      // Redirect based on role
+      const role = userObj?.role?.name || userObj?.role || null
+      if (role === 'ADMIN') navigate('/admin/dashboard')
+      else if (role === 'SECRETAIRE') navigate('/secretary/dashboard')
+      else if (role === 'AGENT_SECURITE') navigate('/agent/dashboard')
+      else if (role === 'EMPLOYE') navigate('/employee/dashboard')
+      else navigate('/visitor')
     },
     onError: (err) => {
       const newCount = attemptCount + 1
