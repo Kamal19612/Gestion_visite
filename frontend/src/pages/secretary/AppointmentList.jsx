@@ -2,19 +2,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import appointmentService from '../../services/appointmentService';
+import secretaireService from '../../services/secretaireService';
 
 export default function AppointmentList() {
   const queryClient = useQueryClient();
 
-  const { data: appointments, isLoading, isError, error } = useQuery({
-    queryKey: ['appointments'],
-    queryFn: appointmentService.getAppointments,
+  const { data: appointments = [], isLoading, isError, error } = useQuery({
+    queryKey: ['secretary', 'appointments'],
+    queryFn: appointmentService.getAllAppointments,
   });
 
   const updateAppointmentStatusMutation = useMutation({
-    mutationFn: ({ id, status }) => appointmentService.updateAppointment(id, { status }),
+    mutationFn: ({ id, status }) => secretaireService.updateAppointment(id, { status }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['secretary', 'appointments', 'pending'] });
     },
     onError: (mutationError) => {
       console.error('Error updating appointment status:', mutationError);

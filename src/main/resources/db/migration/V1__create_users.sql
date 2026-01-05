@@ -18,13 +18,4 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Insert a default admin user
 -- Password is "password" (BCrypt encoded)
-INSERT INTO users (name, email, password, role, type_users, created_date, last_modified_date)
-VALUES (
-    'Admin User',
-    'admin@example.com',
-    '$2a$10$N9Zpww86/3S9.2SULeA25.2gCXYt.d7eR.j0pW4Lg2OSt.a7kU/eS',
-    'ADMIN',
-    'Admin',
-    CURRENT_TIMESTAMP,
-    CURRENT_TIMESTAMP
-);
+-- No default admin is created by SQL migration. Default users are created at application startup.

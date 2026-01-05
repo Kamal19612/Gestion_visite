@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import Input from '../../components/Form/Input';
 import Button from '../../components/ui/Button';
-import appointmentService from '../../services/appointmentService';
+import secretaireService from '../../services/secretaireService';
 
 export default function AppointmentDetails() {
   const { id } = useParams();
@@ -16,8 +16,8 @@ export default function AppointmentDetails() {
 
   // Fetch appointment details
   const { data: appointment, isLoading, isError, error } = useQuery({
-    queryKey: ['appointment', id],
-    queryFn: () => appointmentService.getAppointmentById(id),
+    queryKey: ['secretary', 'appointment', id],
+    queryFn: () => secretaireService.getAppointmentById(id),
     onSuccess: (data) => {
       reset(data); // Populate form with fetched data
     },
@@ -26,12 +26,12 @@ export default function AppointmentDetails() {
 
   // Mutation for updating appointment
   const updateMutation = useMutation({
-    mutationFn: (updatedData) => appointmentService.updateAppointment(id, updatedData),
+    mutationFn: (updatedData) => secretaireService.updateAppointment(id, updatedData),
     onSuccess: () => {
       setSuccessMessage('Rendez-vous mis à jour avec succès !');
       setServerError('');
       setIsEditing(false); // Exit editing mode
-      // Optionally refetch data: queryClient.invalidateQueries(['appointment', id]);
+      // Optionally refetch data: queryClient.invalidateQueries(['secretary', 'appointment', id]);
     },
     onError: (err) => {
       setServerError(err?.response?.data?.message || 'Erreur lors de la mise à jour.');
@@ -41,7 +41,7 @@ export default function AppointmentDetails() {
 
   // Mutation for approving appointment
   const approveMutation = useMutation({
-    mutationFn: () => appointmentService.updateAppointment(id, { status: 'Approved' }),
+    mutationFn: () => secretaireService.updateAppointment(id, { status: 'Approved' }),
     onSuccess: () => {
       setSuccessMessage('Rendez-vous approuvé avec succès !');
       setServerError('');
@@ -55,7 +55,7 @@ export default function AppointmentDetails() {
 
   // Mutation for rejecting appointment
   const rejectMutation = useMutation({
-    mutationFn: () => appointmentService.updateAppointment(id, { status: 'Rejected' }),
+    mutationFn: () => secretaireService.updateAppointment(id, { status: 'Rejected' }),
     onSuccess: () => {
       setSuccessMessage('Rendez-vous rejeté avec succès !');
       setServerError('');

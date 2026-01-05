@@ -8,6 +8,26 @@ export default function MainLayout({ children }) {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
 
+  // Determine home route based on user role
+  const getHomeRoute = () => {
+    if (!user) return '/';
+    const role = typeof user.role === 'string' ? user.role : user.role?.name;
+    switch (role) {
+      case 'VISITEUR':
+        return '/visitor/dashboard';
+      case 'SECRETAIRE':
+        return '/secretary/dashboard';
+      case 'AGENT_SECURITE':
+        return '/agent/dashboard';
+      case 'EMPLOYEUR':
+        return '/employee/dashboard';
+      case 'ADMIN':
+        return '/admin/dashboard';
+      default:
+        return '/';
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <AppHeader />
@@ -36,7 +56,7 @@ export default function MainLayout({ children }) {
             <nav className="bg-white rounded-lg border overflow-hidden">
               <ul className="divide-y">
                 <li>
-                  <Link to="/" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                  <Link to={getHomeRoute()} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
                     <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9l9-7 9 7v11a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1z"/></svg>
                     <span className="text-sm text-gray-700">Accueil</span>
                   </Link>
@@ -65,6 +85,14 @@ export default function MainLayout({ children }) {
                     </Link>
                   </li>
                 )}
+                {user && user.role === 'EMPLOYEUR' && (
+                  <li>
+                    <Link to="/employee/schedule" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                      <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                      <span className="text-sm text-gray-700">Planning</span>
+                    </Link>
+                  </li>
+                )}}
                 {user && user.role === 'ADMIN' && (
                   <li>
                     <Link to="/admin/dashboard" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">

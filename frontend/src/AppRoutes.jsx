@@ -12,6 +12,12 @@ import AppointmentRequest from './pages/visitor/AppointmentRequest';
 import SecretaryDashboard from './pages/secretary/SecretaryDashboard';
 import AppointmentList from './pages/secretary/AppointmentList';
 import AppointmentDetails from './pages/secretary/AppointmentDetails';
+import VisitsToday from './pages/secretary/VisitsToday';
+import Reports from './pages/secretary/Reports';
+import ReportVisits from './pages/secretary/ReportVisits';
+import ReportAppointments from './pages/secretary/ReportAppointments';
+import SecretaryUsers from './pages/secretary/SecretaryUsers';
+import SecretarySettings from './pages/secretary/SecretarySettings';
 import AgentDashboard from './pages/agent/AgentDashboard';
 import OnsiteAppointment from './pages/agent/OnsiteAppointment';
 import RecordVisit from './pages/agent/RecordVisit';
@@ -24,6 +30,8 @@ import AverageDuration from './pages/admin/statistics/AverageDuration';
 import Departments from './pages/admin/statistics/Departments';
 import DetailedReports from './pages/admin/statistics/DetailedReports';
 import EmployeeDashboard from './pages/employe/EmployeeDashboard';
+import EmployeeSchedule from './pages/employe/EmployeeSchedule';
+import EmployeeAppointmentDetail from './pages/employe/EmployeeAppointmentDetail';
 import UserManagement from './pages/admin/UserManagement';
 import UserForm from './pages/admin/UserForm';
 import SystemSettings from './pages/admin/SystemSettings';
@@ -97,6 +105,12 @@ export default function AppRoutes() {
               <Route path="/secretary/dashboard" element={<SecretaryDashboard />} />
               <Route path="/secretary/appointments" element={<AppointmentList />} />
               <Route path="/secretary/appointments/:id" element={<AppointmentDetails />} />
+              <Route path="/secretary/visits/today" element={<VisitsToday />} />
+              <Route path="/secretary/reports" element={<Reports />} />
+              <Route path="/secretary/reports/visits" element={<ReportVisits />} />
+              <Route path="/secretary/reports/appointments" element={<ReportAppointments />} />
+              <Route path="/secretary/users" element={<SecretaryUsers />} />
+              <Route path="/secretary/settings" element={<SecretarySettings />} />
             </Route>
 
             {/* Protected Routes for Security Agent */}
@@ -109,8 +123,10 @@ export default function AppRoutes() {
             </Route>
 
             {/* Protected Routes for Employee */}
-            <Route element={<ProtectedRoute allowedRoles={['EMPLOYE']} />}>
+            <Route element={<ProtectedRoute allowedRoles={['EMPLOYEUR']} />}>
               <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
+              <Route path="/employee/schedule" element={<EmployeeSchedule />} />
+              <Route path="/employee/appointments/:id" element={<EmployeeAppointmentDetail />} />
             </Route>
 
             {/* Protected Routes for Admin */}
